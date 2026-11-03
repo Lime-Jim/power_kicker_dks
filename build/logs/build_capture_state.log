@@ -1,0 +1,1960 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Mon Sep 21 14:05:39 2026
+# Process ID: 18208
+# Current directory: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update
+# Command line: vivado.exe -mode batch -source build_fast_feedback_v1.tcl -log build_capture_state.log -journal build_capture_state.jou -tclargs --routed-only
+# Log file: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/build_capture_state.log
+# Journal file: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update\build_capture_state.jou
+# Running On        :DESKTOP-R7OLA88
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :12th Gen Intel(R) Core(TM) i5-12400
+# CPU Frequency     :2496 MHz
+# CPU Physical cores:6
+# CPU Logical cores :12
+# Host memory       :16908 MB
+# Swap memory       :1073 MB
+# Total Virtual     :17982 MB
+# Available Virtual :7227 MB
+#-----------------------------------------------------------
+source build_fast_feedback_v1.tcl
+# set script_dir [file dirname [file normalize [info script]]]
+# source [file join $script_dir project_manifest.tcl]
+## set pk_project_dir [file dirname [file normalize [info script]]]
+## set pk_project_name power-kicker-fast-feedback-v1
+## set pk_rtl_names {
+##     ad9122_config ad9516_config ad9643_config control key_filter capture_phase_status
+##     pd_adc_capture pd_pid_feedback pid_core_signed reset_sync
+##     spi_config spi_config8 spi_config8r spi_config_top
+##     spi_master spi_master8 spi_st spi_st8
+##     test_ad9122 test_ad9643 top_test uart_rx uart_tx
+##     uart_power_kick_params top_power_kicker
+## }
+## set pk_design_files {}
+## foreach name $pk_rtl_names {
+##     lappend pk_design_files [file join $pk_project_dir $pk_project_name.srcs sources_1 new $name.v]
+## }
+## set pk_ip_files [list \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip clk_wiz_1.xcix] \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip ila_1.xcix] \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip ila_adc.xcix] \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip ila_capture.xcix] \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip vio_0 vio_0.xci] \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip vio_pid vio_pid.xci]]
+## set pk_xdc [file join $pk_project_dir $pk_project_name.srcs constrs_1 new kicker.xdc]
+## set pk_timing_entry [file join $pk_project_dir constraints load_external_timing.tcl]
+## set pk_sim_top [file join $pk_project_dir tests tb_control_regression.sv]
+## set pk_aux_files [list [file join $pk_project_dir constraints adc_dac_io_timing.tcl]]
+## proc pk_assert_project_inputs {} {
+##     global pk_design_files pk_ip_files pk_xdc pk_sim_top pk_project_dir pk_project_name pk_aux_files pk_timing_entry
+##     foreach path [concat $pk_design_files $pk_ip_files $pk_aux_files [list $pk_xdc $pk_sim_top $pk_timing_entry]] {
+##         if {![file isfile $path]} { error "Required source is missing: $path" }
+##     }
+##     set fd [open [file join $pk_project_dir $pk_project_name.xpr] r]
+##     set xml [read $fd]
+##     close $fd
+##     foreach path [concat $pk_design_files $pk_ip_files [list $pk_xdc $pk_sim_top $pk_timing_entry]] {
+##         set relative [string range $path [expr {[string length $pk_project_dir] + 1}] end]
+##         set portable [string map [list "$pk_project_name.srcs/" {$PSRCDIR/}] $relative]
+##         if {$portable eq $relative} { set portable "\$PPRDIR/$relative" }
+##         if {[string first "<File Path=\"$portable\"" $xml] < 0} {
+##             error "Canonical source not referenced by XPR: $portable. Run recreate_project.tcl."
+##         }
+##     }
+##     # Check file references, not Vivado's harmless historical Project Path field.
+##     foreach {whole path} [regexp -all -inline {<File Path="([^"]+)"} $xml] {
+##         if {[string match {*../*} $path] || [string match {*$PGENDIR*} $path] ||
+##             [string match {*/synth/*.v} $path] || [string match {*/hdl/*.v} $path]} {
+##             error "Stale/generated source reference in XPR: $path. Run recreate_project.tcl with the GUI project closed."
+##         }
+##         if {![string match {$PSRCDIR/*} $path] && ![string match {$PPRDIR/*} $path]} {
+##             error "Non-portable source reference in XPR: $path"
+##         }
+##     }
+##     if {[string first XSimWcfgFile $xml] >= 0} {
+##         error "Unexpected waveform configuration reference in XPR"
+##     }
+##     foreach name {Triangle_rom sin_rom square_rom ila_0} {
+##         if {[regexp "<FileSet Name=\"$name\"" $xml]} {
+##             error "Inactive legacy IP is back in the project: $name"
+##         }
+##     }
+##     puts "PROJECT_INPUTS=PASS (portable sources, no legacy/generated duplicates)"
+## }
+## proc pk_configure_project {} {
+##     global pk_timing_entry
+##     set_property top top_power_kicker [get_filesets sources_1]
+##     set_property top_auto_set false [get_filesets sim_1]
+##     set_property top tb_control_regression [get_filesets sim_1]
+##     set_property xsim.simulate.runtime all [get_filesets sim_1]
+##     set timing_file [get_files $pk_timing_entry]
+##     set_property FILE_TYPE Tcl $timing_file
+##     set_property USED_IN_SYNTHESIS false $timing_file
+##     set_property USED_IN_SIMULATION false $timing_file
+##     set_property USED_IN_IMPLEMENTATION true $timing_file
+##     set_property PROCESSING_ORDER LATE $timing_file
+##     update_compile_order -fileset sources_1
+##     update_compile_order -fileset sim_1
+## }
+# pk_assert_project_inputs
+PROJECT_INPUTS=PASS (portable sources, no legacy/generated duplicates)
+# set require_signoff [expr {[lsearch -exact $argv --signoff] >= 0}]
+# set implementation_only [expr {[lsearch -exact $argv --implementation-only] >= 0}]
+# set routed_only [expr {[lsearch -exact $argv --routed-only] >= 0}]
+# if {$require_signoff} {
+#     source [file join $script_dir constraints adc_dac_io_timing.tcl]
+#     ::power_kicker_io::require_validated_profile
+# }
+# set xpr [file join $script_dir power-kicker-fast-feedback-v1.xpr]
+# if {![file exists $xpr]} {
+#     error "Experiment project not found: $xpr"
+# }
+# open_project $xpr
+WARNING: [filemgmt 56-3] IPUserFilesDir: Could not find the directory 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.ip_user_files'.
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/vivado/Vivado/2024.1/data/ip'.
+open_project: Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 687.070 ; gain = 272.867
+# puts "PROJECT=[current_project]"
+PROJECT=power-kicker-fast-feedback-v1
+# puts "PART=[get_property PART [current_project]]"
+PART=xcau15p-ffvb676-2-i
+# set_property top top_power_kicker [current_fileset]
+# pk_configure_project
+update_compile_order: Time (s): cpu = 00:00:00 ; elapsed = 00:00:09 . Memory (MB): peak = 687.070 ; gain = 0.000
+# puts "TOP=[get_property top [current_fileset]]"
+TOP=top_power_kicker
+# puts "IPS=[get_ips]"
+IPS=clk_wiz_1 ila_1 ila_adc ila_capture vio_0 vio_pid
+# update_compile_order -fileset sources_1
+# report_ip_status
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
+| Date         : Mon Sep 21 14:06:02 2026
+| Host         : DESKTOP-R7OLA88 running 64-bit major release  (build 9200)
+| Command      : report_ip_status
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+IP Status Summary
+
+1. Project IP Status
+--------------------
+Your project uses 6 IP. Some of these IP may have undergone changes in this release of the software. Please review the recommended actions.
+
+More information on the Xilinx versioning policy is available at www.xilinx.com.
+
+Project IP Instances
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| Instance Name | Status     | Recommendation      | Change    | IP Name            | IP      | New Version   | New        | Original Part        |
+|               |            |                     | Log       |                    | Version |               | License    |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| clk_wiz_1     | Up-to-date | No changes required |  *(1)     | Clocking Wizard    | 6.0     | 6.0 (Rev. 14) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           |                    | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 14)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| ila_1         | Up-to-date | No changes required |  *(2)     | ILA (Integrated    | 6.2     | 6.2 (Rev. 15) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           | Logic Analyzer)    | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 15)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| ila_adc       | Up-to-date | No changes required |  *(3)     | ILA (Integrated    | 6.2     | 6.2 (Rev. 15) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           | Logic Analyzer)    | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 15)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| ila_capture   | Up-to-date | No changes required |  *(4)     | ILA (Integrated    | 6.2     | 6.2 (Rev. 15) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           | Logic Analyzer)    | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 15)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| vio_0         | Up-to-date | No changes required |  *(5)     | VIO (Virtual       | 3.0     | 3.0 (Rev. 25) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           | Input/Output)      | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 25)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| vio_pid       | Up-to-date | No changes required |  *(6)     | VIO (Virtual       | 3.0     | 3.0 (Rev. 25) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           | Input/Output)      | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 25)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+*(1) d:/vivado/Vivado/2024.1/data/ip/xilinx/clk_wiz_v6_0/doc/clk_wiz_v6_0_changelog.txt
+*(2) d:/vivado/Vivado/2024.1/data/ip/xilinx/ila_v6_2/doc/ila_v6_2_changelog.txt
+*(3) d:/vivado/Vivado/2024.1/data/ip/xilinx/ila_v6_2/doc/ila_v6_2_changelog.txt
+*(4) d:/vivado/Vivado/2024.1/data/ip/xilinx/ila_v6_2/doc/ila_v6_2_changelog.txt
+*(5) d:/vivado/Vivado/2024.1/data/ip/xilinx/vio_v3_0/doc/vio_v3_0_changelog.txt
+*(6) d:/vivado/Vivado/2024.1/data/ip/xilinx/vio_v3_0/doc/vio_v3_0_changelog.txt
+
+
+# generate_target all [get_ips]
+# foreach ip [get_ips] {
+#     set ip_file [get_files [get_property IP_FILE $ip]]
+#     if {[get_property GENERATE_SYNTH_CHECKPOINT $ip_file] &&
+#         [llength [get_runs -quiet ${ip}_synth_1]] == 0} {
+#         create_ip_run $ip_file
+#     }
+# }
+INFO: [Vivado 12-3453] The given sub-design is up-to-date, no action was taken.  If a run is still desired, use the '-force' option for the file:'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_adc/ila_adc.xci'
+# if {$implementation_only || $routed_only} {
+#     if {![string match {*Complete*} [get_property STATUS [get_runs synth_1]]] ||
+#         [get_property NEEDS_REFRESH [get_runs synth_1]]} {
+#         error "Cannot reuse synthesis: incomplete or stale. Run a full build."
+#     }
+#     puts "SYNTH_REUSE=PASS (completed, not stale)"
+# } else {
+#     reset_run synth_1
+#     launch_runs synth_1 -jobs 1
+#     wait_on_run synth_1
+# }
+SYNTH_REUSE=PASS (completed, not stale)
+# set synth_status [get_property STATUS [get_runs synth_1]]
+# puts "SYNTH_STATUS=$synth_status"
+SYNTH_STATUS=synth_design Complete!
+# puts "SYNTH_PROGRESS=[get_property PROGRESS [get_runs synth_1]]"
+SYNTH_PROGRESS=100%
+# if {![string match "*Complete*" $synth_status]} {
+#     error "Synthesis failed: $synth_status"
+# }
+# if {$routed_only} {
+#     if {![string match {*route_design Complete*} [get_property STATUS [get_runs impl_1]]] ||
+#         [get_property NEEDS_REFRESH [get_runs impl_1]]} {
+#         error "Cannot reuse routing: incomplete or stale. Run a full build."
+#     }
+#     puts "ROUTE_REUSE=PASS (completed, not stale)"
+# } else {
+#     reset_run impl_1
+#     launch_runs impl_1 -to_step route_design -jobs 1
+#     wait_on_run impl_1
+# }
+ROUTE_REUSE=PASS (completed, not stale)
+# set impl_status [get_property STATUS [get_runs impl_1]]
+# puts "IMPL_STATUS=$impl_status"
+IMPL_STATUS=route_design Complete!
+# puts "IMPL_PROGRESS=[get_property PROGRESS [get_runs impl_1]]"
+IMPL_PROGRESS=100%
+# if {![string match "*Complete*" $impl_status]} {
+#     error "Implementation failed: $impl_status"
+# }
+# open_run impl_1
+INFO: [Device 21-403] Loading part xcau15p-ffvb676-2-i
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.199 . Memory (MB): peak = 1391.293 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2052 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2024.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Read ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.094 . Memory (MB): peak = 1470.605 ; gain = 7.285
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+INFO: [Designutils 20-5722] Start Reading Physical Databases.
+Reading placement.
+Read Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.032 . Memory (MB): peak = 1834.570 ; gain = 0.000
+Reading placer database...
+Read Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.014 . Memory (MB): peak = 1834.570 ; gain = 0.000
+Read PlaceDB: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.885 . Memory (MB): peak = 1865.672 ; gain = 31.102
+Read PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1865.672 ; gain = 0.000
+Reading routing.
+Read RouteStorage: Time (s): cpu = 00:00:01 ; elapsed = 00:00:02 . Memory (MB): peak = 2002.812 ; gain = 137.141
+Read Physdb Files: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2002.812 ; gain = 168.242
+Restored from archive | CPU: 3.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2002.812 ; gain = 168.242
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 2002.812 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 316 instances were transformed.
+  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 272 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 16 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 4 instances
+  IBUFDS => IBUFDS (DIFFINBUF, IBUFCTRL): 17 instances
+  IOBUF => IOBUF (IBUFCTRL, INBUF, OBUFT): 1 instance 
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 2 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 4 instances
+
+open_run: Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2002.812 ; gain = 1315.742
+# phys_opt_design -aggressive_hold_fix
+Command: phys_opt_design -aggressive_hold_fix
+Attempting to get a license for feature 'Implementation' and/or device 'xcau15p'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcau15p'
+INFO: [Vivado_Tcl 4-241] Physical synthesis in post route mode 
+
+Starting Initial Update Timing Task
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:06 . Memory (MB): peak = 2344.832 ; gain = 306.695
+INFO: [Vivado_Tcl 4-2280] Estimated Timing Summary | WNS= 0.136 | TNS= 0.000 | WHS= 0.011 |
+INFO: [Vivado_Tcl 4-383] Design worst setup slack (WNS) is greater than or equal to 0.000 ns. All physical synthesis setup optimizations will be skipped.
+INFO: [Vivado_Tcl 4-2291] Design worst hold slack (WHS) is greater than or equal to 0.000 ns. Hold fix optimization will be skipped.
+ 
+INFO: [Vivado_Tcl 4-232] No setup violation found. The netlist was not modified.
+INFO: [Common 17-83] Releasing license: Implementation
+7 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+phys_opt_design completed successfully
+phys_opt_design: Time (s): cpu = 00:00:14 ; elapsed = 00:00:09 . Memory (MB): peak = 2344.832 ; gain = 342.020
+# route_design
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xcau15p'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcau15p'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 8 CPUs
+
+Phase 1 Build RT Design
+Checksum: PlaceDB: 9c52f641 ConstDB: 0 ShapeSum: b38cfaaa RouteDB: 42023ac9
+Nodegraph reading from file.  Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.517 . Memory (MB): peak = 2433.215 ; gain = 26.273
+Post Restoration Checksum: NetGraph: 12ee4def | NumContArr: 52c1cbd2 | Constraints: c2a8fa9d | Timing: c2a8fa9d
+Phase 1 Build RT Design | Checksum: 1eb020efb
+
+Time (s): cpu = 00:00:25 ; elapsed = 00:00:21 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 2 Router Initialization
+
+Phase 2.1 Fix Topology Constraints
+Phase 2.1 Fix Topology Constraints | Checksum: 1eb020efb
+
+Time (s): cpu = 00:00:25 ; elapsed = 00:00:21 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 2.2 Pre Route Cleanup
+Phase 2.2 Pre Route Cleanup | Checksum: 1eb020efb
+
+Time (s): cpu = 00:00:26 ; elapsed = 00:00:21 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 2.3 Timing Verification
+
+Phase 2.3.1 Update Timing
+Phase 2.3.1 Update Timing | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:33 ; elapsed = 00:00:24 . Memory (MB): peak = 3207.801 ; gain = 800.859
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.073  | TNS=0.000  | WHS=0.000  | THS=0.000  |
+
+Phase 2.3 Timing Verification | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:33 ; elapsed = 00:00:24 . Memory (MB): peak = 3207.801 ; gain = 800.859
+INFO: [Route 35-61] The design met the timing requirement.
+
+Phase 2.4 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 5.03637 %
+  Global Horizontal Routing Utilization  = 6.02761 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 2.4 Route finalize | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:34 ; elapsed = 00:00:24 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 2.5 Verifying routed nets
+
+ Verification completed successfully
+Phase 2.5 Verifying routed nets | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:34 ; elapsed = 00:00:24 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 2.6 Depositing Routes
+Phase 2.6 Depositing Routes | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:36 ; elapsed = 00:00:26 . Memory (MB): peak = 3207.801 ; gain = 800.859
+Phase 2 Router Initialization | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:36 ; elapsed = 00:00:26 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 3 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 5.03637 %
+  Global Horizontal Routing Utilization  = 6.02761 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 3 Route finalize | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:36 ; elapsed = 00:00:26 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 4 Verifying routed nets
+
+ Verification completed successfully
+Phase 4 Verifying routed nets | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:37 ; elapsed = 00:00:26 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 5 Depositing Routes
+Phase 5 Depositing Routes | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:39 ; elapsed = 00:00:27 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 6 Resolve XTalk
+Phase 6 Resolve XTalk | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:39 ; elapsed = 00:00:27 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 7 Post Process Routing
+Phase 7 Post Process Routing | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:40 ; elapsed = 00:00:28 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Phase 8 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=0.073  | TNS=0.000  | WHS=0.000  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 8 Post Router Timing | Checksum: 2251651b7
+
+Time (s): cpu = 00:00:40 ; elapsed = 00:00:28 . Memory (MB): peak = 3207.801 ; gain = 800.859
+Time taken to check if laguna hold fix is required (in secs): 0
+Skip PhysOpt in Router because non-negative WNS value: 1.36435e-10 .
+Total Elapsed time in route_design: 34.406 secs
+
+Phase 9 Post-Route Event Processing
+Phase 9 Post-Route Event Processing | Checksum: 191e22bb4
+
+Time (s): cpu = 00:00:51 ; elapsed = 00:00:35 . Memory (MB): peak = 3207.801 ; gain = 800.859
+INFO: [Route 35-16] Router Completed Successfully
+Ending Routing Task | Checksum: 191e22bb4
+
+Time (s): cpu = 00:00:51 ; elapsed = 00:00:35 . Memory (MB): peak = 3207.801 ; gain = 800.859
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+11 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:55 ; elapsed = 00:00:37 . Memory (MB): peak = 3207.801 ; gain = 862.969
+# set report_dir [file join $script_dir verification implementation]
+# file mkdir $report_dir
+# source [file join $script_dir constraints adc_dac_io_timing.tcl]
+## namespace eval ::power_kicker_io {
+##     variable script_dir [file dirname [file normalize [info script]]]
+##     variable profile {}
+##     variable profile_path {}
+##     variable status PROVISIONAL_NOT_LOADED
+##     variable reasons {}
+## }
+## proc ::power_kicker_io::load_profile {} {
+##     variable script_dir
+##     variable profile
+##     variable profile_path
+##     variable status
+##     variable reasons
+##     set profile {}
+##     set reasons {}
+##     set profile_path [file join $script_dir board_timing.tcl]
+##     if {[info exists ::env(POWER_KICKER_BOARD_TIMING)] &&
+##         $::env(POWER_KICKER_BOARD_TIMING) ne {}} {
+##         set profile_path [file normalize $::env(POWER_KICKER_BOARD_TIMING)]
+##     }
+##     if {![file isfile $profile_path]} {
+##         set status PROVISIONAL_MISSING_BOARD_PROFILE
+##         set reasons [list "Missing board timing profile: $profile_path"]
+##         return 0
+##     }
+##     uplevel #0 [list source $profile_path]
+##     return [validate_profile]
+## }
+## proc ::power_kicker_io::validate_profile {} {
+##     variable profile
+##     variable status
+##     variable reasons
+##     set reasons {}
+##     set required {
+##         schema_version validated board_revision evidence
+##         adc_reg16 adc_reg17 dac_reg16 adc_period_ns dac_period_ns
+##         adc_data_lead_min_ns adc_data_lead_max_ns
+##         adc_board_skew_min_ns adc_board_skew_max_ns adc_margin_ns
+##         dac_board_skew_min_ns dac_board_skew_max_ns dac_margin_ns
+##     }
+##     foreach key $required {
+##         if {![dict exists $profile $key] || [dict get $profile $key] eq {}} {
+##             lappend reasons "Unspecified timing field: $key"
+##         }
+##     }
+##     if {[llength $reasons]} {
+##         set status PROVISIONAL_INCOMPLETE_BOARD_PROFILE
+##         return 0
+##     }
+##     foreach key {
+##         schema_version validated adc_reg16 adc_reg17 dac_reg16
+##     } {
+##         if {![string is integer -strict [dict get $profile $key]]} {
+##             error "Board timing field $key must be an integer"
+##         }
+##     }
+##     if {[dict get $profile schema_version] != 1} {
+##         error "Unsupported board timing profile schema"
+##     }
+##     # These values match the committed SPI tables. Re-review the model whenever
+##     # those tables change; a different phase setting must not silently pass.
+##     foreach {key expected} {adc_reg16 0 adc_reg17 133 dac_reg16 0} {
+##         if {[dict get $profile $key] != $expected} {
+##             error "Timing profile $key does not match the current SPI configuration ($expected)"
+##         }
+##     }
+##     foreach key {
+##         adc_period_ns dac_period_ns adc_data_lead_min_ns adc_data_lead_max_ns
+##         adc_board_skew_min_ns adc_board_skew_max_ns adc_margin_ns
+##         dac_board_skew_min_ns dac_board_skew_max_ns dac_margin_ns
+##     } {
+##         set value [dict get $profile $key]
+##         if {![string is double -strict $value] ||
+##             [catch {expr {abs(double($value)) < 1.0e6}} finite] || !$finite} {
+##             error "Board timing field $key must be a finite time in ns"
+##         }
+##     }
+##     foreach {key expected} {adc_period_ns 4.0 dac_period_ns 2.0} {
+##         if {abs([dict get $profile $key] - $expected) > 0.000001} {
+##             error "$key must match the current XDC clock period ($expected ns)"
+##         }
+##     }
+##     foreach {low high} {
+##         adc_data_lead_min_ns adc_data_lead_max_ns
+##         adc_board_skew_min_ns adc_board_skew_max_ns
+##         dac_board_skew_min_ns dac_board_skew_max_ns
+##     } {
+##         if {[dict get $profile $low] > [dict get $profile $high]} {
+##             error "Board timing range is reversed: $low > $high"
+##         }
+##     }
+##     foreach key {adc_margin_ns dac_margin_ns} {
+##         if {[dict get $profile $key] < 0} {
+##             error "$key must be nonnegative"
+##         }
+##     }
+##     # Evaluate even an unvalidated complete profile to reject impossible eyes.
+##     calculate_delays
+##     if {[dict get $profile validated] != 1} {
+##         set status PROVISIONAL_UNVALIDATED_BOARD_PROFILE
+##         set reasons [list {Board profile has not been validated against the actual hardware}]
+##         return 0
+##     }
+##     set status PROFILE_VALIDATED_AWAITING_STA
+##     return 1
+## }
+## proc ::power_kicker_io::calculate_delays {} {
+##     variable profile
+##     set adc_ui [expr {[dict get $profile adc_period_ns] / 2.0}]
+##     set dac_ui [expr {[dict get $profile dac_period_ns] / 2.0}]
+##     # A positive lead means ADC data changes BEFORE its sampling DCO edge.
+##     # Reference each transition to the preceding opposite DCO edge, so Vivado
+##     # sees a positive half-cycle launch-to-capture interval on both edges.
+##     set adc_min [expr {$adc_ui - [dict get $profile adc_data_lead_max_ns] +
+##         [dict get $profile adc_board_skew_min_ns] - [dict get $profile adc_margin_ns]}]
+##     set adc_max [expr {$adc_ui - [dict get $profile adc_data_lead_min_ns] +
+##         [dict get $profile adc_board_skew_max_ns] + [dict get $profile adc_margin_ns]}]
+##     if {$adc_min <= 0 || $adc_max >= $adc_ui || $adc_min > $adc_max} {
+##         error "ADC eye crosses its selected DCO edge; review hardware phase/delay (min=$adc_min max=$adc_max UI=$adc_ui)"
+##     }
+##     # AD9122 Rev C Table 13, register 0x16 = 0: tS=-0.05, tH=0.65.
+##     # Data and DCI launch on the SAME ODDR edge. Rebase BOTH output delays by
+##     # one UI so default opposite-edge DDR STA checks that same-edge word.
+##     # This avoids granting a spurious extra UI to the new I/Q word.
+##     set dac_max [expr {$dac_ui - 0.05 + [dict get $profile dac_board_skew_max_ns] +
+##         [dict get $profile dac_margin_ns]}]
+##     set dac_min [expr {$dac_ui - 0.65 + [dict get $profile dac_board_skew_min_ns] -
+##         [dict get $profile dac_margin_ns]}]
+##     if {$dac_max - $dac_min >= $dac_ui} {
+##         error "DAC setup/hold, PCB skew and uncertainty leave no valid DDR eye"
+##     }
+##     return [dict create adc_min $adc_min adc_max $adc_max \
+##         dac_min $dac_min dac_max $dac_max]
+## }
+## proc ::power_kicker_io::require_validated_profile {} {
+##     variable status
+##     variable reasons
+##     if {![load_profile]} {
+##         error "External I/O timing signoff blocked: $status; [join $reasons {; }]"
+##     }
+##     return $status
+## }
+## proc ::power_kicker_io::apply {} {
+##     variable profile
+##     variable status
+##     variable reasons
+##     # Use the primary source port: ODDRE1 expands into device primitives during
+##     # implementation, so a hard-coded .../u_dac_dci_oddr/C pin is not portable.
+##     # divide_by 1 follows the actual source->buffer->ODDR->OBUFDS clock path.
+##     set dci_source [get_ports fpga_clk_p]
+##     create_generated_clock -name dac_dci_forwarded -source $dci_source \
+##         -divide_by 1 [get_ports dac_dci_p]
+##     if {![load_profile]} {
+##         puts "WARNING: POWER_KICKER_IO_TIMING=$status; [join $reasons {; }]. Internal build only; ADC/DAC external timing is NOT signed off."
+##         return
+##     }
+##     foreach {name key} {adc_clk_p adc_period_ns fpga_clk_p dac_period_ns} {
+##         set actual [get_property PERIOD [get_clocks $name]]
+##         if {abs($actual - [dict get $profile $key]) > 0.000001} {
+##             error "Timing profile $key disagrees with active clock $name"
+##         }
+##     }
+##     set delays [calculate_delays]
+##     set adc_ports [get_ports {adc_data_p1[*] adc_data_n1[*]}]
+##     set dac_ports [get_ports {dac_data_p[*] dac_data_n[*] dac_frame_p dac_frame_n}]
+##     if {[llength $adc_ports] != 28 || [llength $dac_ports] != 34} {
+##         error "Unexpected ADC/DAC differential port count; review timing coverage"
+##     }
+##     set_input_delay -clock adc_clk_p -max [dict get $delays adc_max] $adc_ports
+##     set_input_delay -clock adc_clk_p -min [dict get $delays adc_min] $adc_ports
+##     set_input_delay -clock adc_clk_p -clock_fall -add_delay -max [dict get $delays adc_max] $adc_ports
+##     set_input_delay -clock adc_clk_p -clock_fall -add_delay -min [dict get $delays adc_min] $adc_ports
+##     set_output_delay -clock dac_dci_forwarded -max [dict get $delays dac_max] $dac_ports
+##     set_output_delay -clock dac_dci_forwarded -min [dict get $delays dac_min] $dac_ports
+##     set_output_delay -clock dac_dci_forwarded -clock_fall -add_delay -max [dict get $delays dac_max] $dac_ports
+##     set_output_delay -clock dac_dci_forwarded -clock_fall -add_delay -min [dict get $delays dac_min] $dac_ports
+##     set status CONSTRAINED_AWAITING_STA
+##     puts "INFO: POWER_KICKER_IO_TIMING=$status; board=[dict get $profile board_revision]; delays(ns)=$delays"
+## }
+## proc ::power_kicker_io::audit_routed_profile {report_dir {require_signoff 0}} {
+##     variable profile
+##     variable status
+##     variable reasons
+##     file mkdir $report_dir
+##     set summary_path [file join $report_dir adc_dac_io_status.txt]
+##     if {![load_profile]} {
+##         set fd [open $summary_path w]
+##         puts $fd "STATUS=$status"
+##         puts $fd "DETAIL=[join $reasons {; }]"
+##         puts $fd {External ADC/DAC timing is not signed off.}
+##         close $fd
+##         if {$require_signoff} {
+##             error "External I/O timing signoff blocked: $status"
+##         }
+##         return $status
+##     }
+##     set expected [calculate_delays]
+##     set failures {}
+##     set count 0
+##     set csv [open [file join $report_dir adc_dac_io_coverage.csv] w]
+##     puts $csv {interface,port,analysis,clock_edge,delay_ns,slack_ns,requirement_ns,status}
+##     # ADC differential timing is represented by the P pin in the DIFFINBUF
+##     # timing model; both polarities still have input-delay declarations.
+##     set adc_ports [get_ports {adc_data_p1[*]}]
+##     set dac_ports [get_ports {dac_data_p[*] dac_data_n[*] dac_frame_p dac_frame_n}]
+##     if {[llength $adc_ports] != 14 || [llength $dac_ports] != 34} {
+##         lappend failures {ADC/DAC port inventory does not match expected coverage}
+##     }
+##     foreach iface {adc dac} {
+##         set ports [expr {$iface eq {adc} ? $adc_ports : $dac_ports}]
+##         foreach port $ports {
+##             foreach kind {max min} {
+##                 foreach edge {rise fall} {
+##                     if {$iface eq {adc}} {
+##                         set paths [get_timing_paths -quiet \
+##                             -${edge}_from [get_clocks adc_clk_p] -through $port \
+##                             -delay_type $kind -max_paths 1]
+##                         set delay_property INPUT_DELAY
+##                     } else {
+##                         set paths [get_timing_paths -quiet \
+##                             -from [get_clocks fpga_clk_p] -through $port \
+##                             -${edge}_to [get_clocks dac_dci_forwarded] \
+##                             -delay_type $kind -max_paths 1]
+##                         set delay_property OUTPUT_DELAY
+##                     }
+##                     incr count
+##                     set row_status PASS
+##                     if {[llength $paths] != 1} {
+##                         lappend failures "$iface $port $kind $edge: missing constrained path"
+##                         puts $csv "$iface,$port,$kind,$edge,,,,MISSING_PATH"
+##                         continue
+##                     }
+##                     set actual_delay [get_property $delay_property $paths]
+##                     set slack [get_property SLACK $paths]
+##                     set requirement [get_property REQUIREMENT $paths]
+##                     # Vivado timing path properties report to ps precision.
+##                     if {$actual_delay eq {} ||
+##                         abs($actual_delay - [dict get $expected ${iface}_${kind}]) > 0.0011} {
+##                         set row_status DELAY_MISMATCH
+##                         lappend failures "$iface $port $kind $edge: applied delay differs from profile"
+##                     }
+##                     if {$slack eq {} || $slack < 0} {
+##                         set row_status TIMING_FAILED
+##                         lappend failures "$iface $port $kind $edge: slack=$slack ns"
+##                     }
+##                     if {$iface eq {dac}} {
+##                         set edge_requirement [expr {$kind eq {max} ? 1.0 : 0.0}]
+##                         if {abs($requirement - $edge_requirement) > 0.0011} {
+##                             set row_status EDGE_MISMATCH
+##                             lappend failures "$iface $port $kind $edge: unexpected clock relationship"
+##                         }
+##                     }
+##                     puts $csv "$iface,$port,$kind,$edge,$actual_delay,$slack,$requirement,$row_status"
+##                 }
+##             }
+##         }
+##     }
+##     close $csv
+##     foreach kind {max min} {
+##         report_timing -from $adc_ports -delay_type $kind -max_paths 28 -nworst 2 \
+##             -path_type full_clock_expanded -file [file join $report_dir adc_io_${kind}.rpt]
+##         report_timing -to $dac_ports -delay_type $kind -max_paths 68 -nworst 2 \
+##             -path_type full_clock_expanded -file [file join $report_dir dac_io_${kind}.rpt]
+##     }
+##     set status [expr {[llength $failures] ? {IO_STA_FAILED} : {IO_STA_PASSED}}]
+##     set fd [open $summary_path w]
+##     puts $fd "STATUS=$status"
+##     puts $fd "BOARD=[dict get $profile board_revision]"
+##     puts $fd "EVIDENCE=[dict get $profile evidence]"
+##     puts $fd "CHECKED_EDGE_PATHS=$count"
+##     puts $fd "FAILURES=[llength $failures]"
+##     puts $fd [join $failures \n]
+##     puts $fd {I/O STA does not replace CDC review or physical board validation.}
+##     close $fd
+##     puts "INFO: POWER_KICKER_IO_TIMING=$status; checked=$count; failures=[llength $failures]"
+##     if {$require_signoff && [llength $failures]} {
+##         error "ADC/DAC routed timing audit failed; see $summary_path"
+##     }
+##     return $status
+## }
+# set io_status [::power_kicker_io::audit_routed_profile $report_dir $require_signoff]
+# puts "ADC_DAC_IO_STATUS=$io_status"
+ADC_DAC_IO_STATUS=PROVISIONAL_MISSING_BOARD_PROFILE
+# if {$io_status eq {IO_STA_FAILED}} {
+#     error "A supplied board profile failed I/O timing or coverage; see $report_dir"
+# }
+# if {[llength [get_clocks -quiet dac_dci_forwarded]] != 1} {
+#     error "Forwarded DCI clock missing: external Tcl constraints did not load"
+# }
+# report_timing_summary -delay_type min_max -report_unconstrained -file [file join $report_dir timing_summary.rpt]
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Temperature grade: I, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+# report_cdc -details -file [file join $report_dir cdc.rpt]
+INFO: [Timing 38-91] UpdateTimingParams: No interconnect No Cell Dly, Speed grade: -2, Temperature grade: I, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-433] Consider using Xilinx recommended XPM_CDC modules to avoid Critical severities
+INFO: [Timing 38-314] The report_cdc command only analyzes and reports clock domain crossing paths where clocks have been defined on both source and destination sides. Ports with no input delay constraint are skipped. Please run check_timing to verify there are no missing clock definitions in your design, nor any unconstrained input port.
+# report_methodology -file [file join $report_dir methodology.rpt]
+Command: report_methodology -file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/implementation/methodology.rpt
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 2 threads
+INFO: [Vivado_Tcl 2-1520] The results of Report Methodology are in file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/implementation/methodology.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:00:15 ; elapsed = 00:00:09 . Memory (MB): peak = 3207.801 ; gain = 0.000
+# report_drc -file [file join $report_dir drc.rpt]
+Command: report_drc -file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/implementation/drc.rpt
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/implementation/drc.rpt.
+report_drc completed successfully
+# report_utilization -file [file join $report_dir utilization.rpt]
+# set latch_cells [get_cells -hier -quiet -filter {REF_NAME =~ LD*}]
+# puts "LATCH_COUNT=[llength $latch_cells]"
+LATCH_COUNT=0
+# if {[llength $latch_cells]} { error "Unexpected inferred latches: $latch_cells" }
+# foreach delay_type {max min} {
+#     set paths [get_timing_paths -delay_type $delay_type -max_paths 1 -nworst 1]
+#     if {![llength $paths]} { error "No $delay_type timing paths found" }
+#     set slack [get_property SLACK [lindex $paths 0]]
+#     puts "WORST_${delay_type}_SLACK=$slack"
+#     if {$slack < 0.0} { error "Routed $delay_type timing failed: $slack ns; see $report_dir" }
+# }
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+WORST_max_SLACK=0.136
+WORST_min_SLACK=0.011
+# puts "INTERNAL_TIMING=PASS; consult TIMING_CONSTRAINTS.md for external I/O status"
+INTERNAL_TIMING=PASS; consult TIMING_CONSTRAINTS.md for external I/O status
+# write_checkpoint -force [file join $script_dir power-kicker-fast-feedback-v1.runs impl_1 top_power_kicker_routed.dcp]
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.067 . Memory (MB): peak = 3207.801 ; gain = 0.000
+Wrote PlaceDB: Time (s): cpu = 00:00:04 ; elapsed = 00:00:01 . Memory (MB): peak = 3207.801 ; gain = 0.000
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3207.801 ; gain = 0.000
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.285 . Memory (MB): peak = 3207.801 ; gain = 0.000
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.037 . Memory (MB): peak = 3207.801 ; gain = 0.000
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 3207.801 ; gain = 0.000
+Write Physdb Complete: Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 3207.801 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker_routed.dcp' has been generated.
+# close_design
+# launch_runs impl_1 -to_step write_bitstream -jobs 1
+INFO: [Vivado 12-4149] The synthesis checkpoint for IP 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_adc/ila_adc.xci' is already up-to-date
+[Mon Sep 21 14:07:30 2026] Launched impl_1...
+Run output will be captured here: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/runme.log
+# wait_on_run impl_1
+[Mon Sep 21 14:07:30 2026] Waiting for impl_1 to finish...
+
+*** Running vivado
+    with args -log top_power_kicker.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source top_power_kicker.tcl -notrace
+
+
+
+****** Vivado v2024.1 (64-bit)
+  **** SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+  **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+  **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+  **** Start of session at: Mon Sep 21 13:47:50 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source top_power_kicker.tcl -notrace
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+create_project: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 613.012 ; gain = 200.457
+Command: link_design -top top_power_kicker -part xcau15p-ffvb676-2-i
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+INFO: [Device 21-403] Loading part xcau15p-ffvb676-2-i
+INFO: [Project 1-454] Reading design checkpoint 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/.Xil/Vivado-19940-DESKTOP-R7OLA88/ila_capture/ila_capture.dcp' for cell 'u_ila_capture'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.gen/sources_1/ip/vio_pid/vio_pid.dcp' for cell 'u_vio_pid'
+INFO: [Project 1-454] Reading design checkpoint 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/.Xil/Vivado-19940-DESKTOP-R7OLA88/clk_wiz_1/clk_wiz_1.dcp' for cell 'u_hardware/clk_md'
+INFO: [Project 1-454] Reading design checkpoint 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/.Xil/Vivado-19940-DESKTOP-R7OLA88/ila_adc/ila_adc.dcp' for cell 'u_hardware/u_ila_adc'
+INFO: [Project 1-454] Reading design checkpoint 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/.Xil/Vivado-19940-DESKTOP-R7OLA88/ila_1/ila_1.dcp' for cell 'u_hardware/u_dac_phy/u_ila_dac'
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.209 . Memory (MB): peak = 1400.160 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2039 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2024.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Chipscope 16-324] Core: u_hardware/u_dac_phy/u_ila_dac UUID: d4b1074c-f8bf-5f1e-8cb4-c7ab2af0e8d1 
+INFO: [Chipscope 16-324] Core: u_hardware/u_ila_adc UUID: d8e30059-f87a-5f48-9d48-6f0977c42748 
+INFO: [Chipscope 16-324] Core: u_ila_capture UUID: 212ac3fa-1c48-5f87-b9f0-a6ad961d62ee 
+INFO: [Chipscope 16-324] Core: u_vio_pid UUID: e70ee47d-e413-53f3-a5a3-ea8c4d110e97 
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_adc/ila_v6_2/constraints/ila_impl.xdc] for cell 'u_hardware/u_ila_adc/inst'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_adc/ila_v6_2/constraints/ila_impl.xdc] for cell 'u_hardware/u_ila_adc/inst'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_adc/ila_v6_2/constraints/ila.xdc] for cell 'u_hardware/u_ila_adc/inst'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_adc/ila_v6_2/constraints/ila.xdc] for cell 'u_hardware/u_ila_adc/inst'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.gen/sources_1/ip/vio_0/vio_0.xdc] for cell 'u_vio_control'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.gen/sources_1/ip/vio_0/vio_0.xdc] for cell 'u_vio_control'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/clk_wiz_1/clk_wiz_1_board.xdc] for cell 'u_hardware/clk_md/inst'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/clk_wiz_1/clk_wiz_1_board.xdc] for cell 'u_hardware/clk_md/inst'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/clk_wiz_1/clk_wiz_1.xdc] for cell 'u_hardware/clk_md/inst'
+create_clock: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1524.344 ; gain = 35.406
+INFO: [Timing 38-35] Done setting XDC timing constraints. [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/clk_wiz_1/clk_wiz_1.xdc:54]
+INFO: [Timing 38-2] Deriving generated clocks [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/clk_wiz_1/clk_wiz_1.xdc:54]
+get_clocks: Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 1957.391 ; gain = 433.047
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/clk_wiz_1/clk_wiz_1.xdc] for cell 'u_hardware/clk_md/inst'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_1/ila_v6_2/constraints/ila_impl.xdc] for cell 'u_hardware/u_dac_phy/u_ila_dac/inst'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_1/ila_v6_2/constraints/ila_impl.xdc] for cell 'u_hardware/u_dac_phy/u_ila_dac/inst'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_1/ila_v6_2/constraints/ila.xdc] for cell 'u_hardware/u_dac_phy/u_ila_dac/inst'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_1/ila_v6_2/constraints/ila.xdc] for cell 'u_hardware/u_dac_phy/u_ila_dac/inst'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.gen/sources_1/ip/vio_pid/vio_pid.xdc] for cell 'u_vio_pid'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.gen/sources_1/ip/vio_pid/vio_pid.xdc] for cell 'u_vio_pid'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_capture/ila_v6_2/constraints/ila_impl.xdc] for cell 'u_ila_capture/inst'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_capture/ila_v6_2/constraints/ila_impl.xdc] for cell 'u_ila_capture/inst'
+Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_capture/ila_v6_2/constraints/ila.xdc] for cell 'u_ila_capture/inst'
+Finished Parsing XDC File [c:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/sources_1/ip/ila_capture/ila_v6_2/constraints/ila.xdc] for cell 'u_ila_capture/inst'
+Parsing XDC File [C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/constrs_1/new/kicker.xdc]
+Finished Parsing XDC File [C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.srcs/constrs_1/new/kicker.xdc]
+Sourcing Tcl File [C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/constraints/load_external_timing.tcl]
+WARNING: POWER_KICKER_IO_TIMING=PROVISIONAL_MISSING_BOARD_PROFILE; Missing board timing profile: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/constraints/board_timing.tcl. Internal build only; ADC/DAC external timing is NOT signed off.
+INFO: POWER_KICKER_CONSTRAINT_LOADER=C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/constraints/adc_dac_io_timing.tcl
+Finished Sourcing Tcl File [C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/constraints/load_external_timing.tcl]
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-1687] 6 scoped IP constraints or related sub-commands were skipped due to synthesis logic optimizations usually triggered by constant connectivity or unconnected output pins. To review the skipped constraints and messages, run the command 'set_param netlist.IPMsgFiltering false' before opening the design.
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 1957.391 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 310 instances were transformed.
+  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 272 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 16 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 4 instances
+  IBUFDS => IBUFDS (DIFFINBUF, IBUFCTRL): 17 instances
+  IOBUF => IOBUF (IBUFCTRL, INBUF, OBUFT): 1 instance 
+
+19 Infos, 33 Warnings, 0 Critical Warnings and 0 Errors encountered.
+link_design completed successfully
+link_design: Time (s): cpu = 00:00:23 ; elapsed = 00:00:23 . Memory (MB): peak = 1957.391 ; gain = 1274.363
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xcau15p'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcau15p'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 1957.391 ; gain = 0.000
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 2d4af71b0
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 1990.695 ; gain = 33.305
+
+Starting Logic Optimization Task
+
+Phase 1 Initialization
+
+Phase 1.1 Core Generation And Design Setup
+
+Phase 1.1.1 Generate And Synthesize Debug Cores
+INFO: [Chipscope 16-329] Generating Script for core instance : dbg_hub 
+INFO: [IP_Flow 19-3806] Processing IP xilinx.com:ip:xsdbm:3.0 for cell dbg_hub_CV.
+Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 2426.020 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.029 . Memory (MB): peak = 2426.020 ; gain = 0.000
+Phase 1.1.1 Generate And Synthesize Debug Cores | Checksum: 30d3971de
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:01:20 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Phase 1.1 Core Generation And Design Setup | Checksum: 30d3971de
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:01:20 . Memory (MB): peak = 2426.020 ; gain = 22.176
+
+Phase 1.2 Setup Constraints And Sort Netlist
+Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 30d3971de
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:01:20 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Phase 1 Initialization | Checksum: 30d3971de
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:01:20 . Memory (MB): peak = 2426.020 ; gain = 22.176
+
+Phase 2 Timer Update And Timing Data Collection
+
+Phase 2.1 Timer Update
+Phase 2.1 Timer Update | Checksum: 30d3971de
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:01:21 . Memory (MB): peak = 2426.020 ; gain = 22.176
+
+Phase 2.2 Timing Data Collection
+Phase 2.2 Timing Data Collection | Checksum: 30d3971de
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:01:21 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Phase 2 Timer Update And Timing Data Collection | Checksum: 30d3971de
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:01:21 . Memory (MB): peak = 2426.020 ; gain = 22.176
+
+Phase 3 Retarget
+INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
+INFO: [Opt 31-1566] Pulled 7 inverters resulting in an inversion of 114 pins
+INFO: [Opt 31-138] Pushed 21 inverter(s) to 1000 load pin(s).
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[11].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[12].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[13].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[14].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[15].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[16].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[17].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[18].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[19].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[1].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[20].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[21].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[22].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[24].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[25].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[26].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[27].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[28].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[29].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[2].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[30].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[31].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[32].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[33].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[34].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[35].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[36].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[37].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[38].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[39].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[3].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[40].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[41].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[42].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[43].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[44].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[45].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[46].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[47].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[48].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[49].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[4].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[50].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[51].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[6].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[8].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell u_ila_capture/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[9].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 3 Retarget | Checksum: 2b38cf5c0
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:01:22 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Retarget | Checksum: 2b38cf5c0
+INFO: [Opt 31-389] Phase Retarget created 21 cells and removed 57 cells
+INFO: [Opt 31-1021] In phase Retarget, 209 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 4 Constant propagation
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Phase 4 Constant propagation | Checksum: 2fe4188d6
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:01:22 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Constant propagation | Checksum: 2fe4188d6
+INFO: [Opt 31-389] Phase Constant propagation created 0 cells and removed 48 cells
+INFO: [Opt 31-1021] In phase Constant propagation, 160 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 5 Sweep
+Phase 5 Sweep | Checksum: 316f85563
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:01:22 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Sweep | Checksum: 316f85563
+INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 120 cells
+INFO: [Opt 31-1021] In phase Sweep, 4105 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 6 BUFG optimization
+INFO: [Opt 31-1077] Phase BUFG optimization inserted 0 global clock buffer(s) for CLOCK_LOW_FANOUT.
+Phase 6 BUFG optimization | Checksum: 316f85563
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:01:23 . Memory (MB): peak = 2426.020 ; gain = 22.176
+BUFG optimization | Checksum: 316f85563
+INFO: [Opt 31-662] Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 0 cells.
+
+Phase 7 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 7 Shift Register Optimization | Checksum: 316f85563
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:01:23 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Shift Register Optimization | Checksum: 316f85563
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 8 Post Processing Netlist
+Phase 8 Post Processing Netlist | Checksum: 316f85563
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:01:23 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Post Processing Netlist | Checksum: 316f85563
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+INFO: [Opt 31-1021] In phase Post Processing Netlist, 195 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 9 Finalization
+
+Phase 9.1 Finalizing Design Cores and Updating Shapes
+Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum: 328d9c3ae
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:01:24 . Memory (MB): peak = 2426.020 ; gain = 22.176
+
+Phase 9.2 Verifying Netlist Connectivity
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.032 . Memory (MB): peak = 2426.020 ; gain = 0.000
+Phase 9.2 Verifying Netlist Connectivity | Checksum: 328d9c3ae
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:01:24 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Phase 9 Finalization | Checksum: 328d9c3ae
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:01:24 . Memory (MB): peak = 2426.020 ; gain = 22.176
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |              21  |              57  |                                            209  |
+|  Constant propagation         |               0  |              48  |                                            160  |
+|  Sweep                        |               0  |             120  |                                           4105  |
+|  BUFG optimization            |               0  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                            195  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+Ending Logic Optimization Task | Checksum: 328d9c3ae
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:01:24 . Memory (MB): peak = 2426.020 ; gain = 22.176
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+INFO: [Pwropt 34-9] Applying IDT optimizations ...
+INFO: [Pwropt 34-10] Applying ODC optimizations ...
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+
+
+Starting PowerOpt Patch Enables Task
+INFO: [Pwropt 34-162] WRITE_MODE attribute of 56 BRAM(s) out of a total of 108 has been updated to save power. Run report_power_opt to get a complete listing of the BRAMs updated.
+INFO: [Pwropt 34-201] Structural ODC has moved 0 WE to EN ports
+Number of BRAM Ports augmented: 116 newly gated: 0 Total Ports: 216
+Ending PowerOpt Patch Enables Task | Checksum: 2f6a43e36
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.381 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Ending Power Optimization Task | Checksum: 2f6a43e36
+
+Time (s): cpu = 00:00:16 ; elapsed = 00:00:08 . Memory (MB): peak = 2714.965 ; gain = 288.945
+
+Starting Final Cleanup Task
+
+Starting Logic Optimization Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Logic Optimization Task | Checksum: 1fe553107
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:03 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Ending Final Cleanup Task | Checksum: 1fe553107
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:05 . Memory (MB): peak = 2714.965 ; gain = 0.000
+
+Starting Netlist Obfuscation Task
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Ending Netlist Obfuscation Task | Checksum: 1fe553107
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 2714.965 ; gain = 0.000
+INFO: [Common 17-83] Releasing license: Implementation
+107 Infos, 33 Warnings, 0 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:00:40 ; elapsed = 00:01:43 . Memory (MB): peak = 2714.965 ; gain = 757.574
+INFO: [Vivado 12-24828] Executing command : report_drc -file top_power_kicker_drc_opted.rpt -pb top_power_kicker_drc_opted.pb -rpx top_power_kicker_drc_opted.rpx
+Command: report_drc -file top_power_kicker_drc_opted.rpt -pb top_power_kicker_drc_opted.pb -rpx top_power_kicker_drc_opted.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker_drc_opted.rpt.
+report_drc completed successfully
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.018 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.074 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.069 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Write Physdb Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.104 . Memory (MB): peak = 2714.965 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker_opt.dcp' has been generated.
+INFO: [Chipscope 16-240] Debug cores have already been implemented
+Command: place_design
+Attempting to get a license for feature 'Implementation' and/or device 'xcau15p'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcau15p'
+INFO: [Common 17-83] Releasing license: Implementation
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 2 CPUs
+
+Starting Placer Task
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 1fbd1e5eb
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.022 . Memory (MB): peak = 2714.965 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 2714.965 ; gain = 0.000
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: 26482e59a
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: 279ceb49a
+
+Time (s): cpu = 00:00:23 ; elapsed = 00:00:21 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: 279ceb49a
+
+Time (s): cpu = 00:00:23 ; elapsed = 00:00:21 . Memory (MB): peak = 3387.148 ; gain = 672.184
+Phase 1 Placer Initialization | Checksum: 279ceb49a
+
+Time (s): cpu = 00:00:23 ; elapsed = 00:00:21 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+
+Phase 2.1.1 Partition Driven Placement
+
+Phase 2.1.1.1 PBP: Partition Driven Placement
+Phase 2.1.1.1 PBP: Partition Driven Placement | Checksum: 301fa4cdf
+
+Time (s): cpu = 00:00:34 ; elapsed = 00:00:28 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2.1.1.2 PBP: Clock Region Placement
+INFO: [Place 30-3162] Check ILP status : ILP-based clock placer completed successfully.
+Phase 2.1.1.2 PBP: Clock Region Placement | Checksum: 216283afd
+
+Time (s): cpu = 00:00:34 ; elapsed = 00:00:28 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2.1.1.3 PBP: Compute Congestion
+Phase 2.1.1.3 PBP: Compute Congestion | Checksum: 216283afd
+
+Time (s): cpu = 00:00:42 ; elapsed = 00:00:33 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2.1.1.4 PBP: UpdateTiming
+Phase 2.1.1.4 PBP: UpdateTiming | Checksum: 28ce80f0f
+
+Time (s): cpu = 00:00:43 ; elapsed = 00:00:33 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2.1.1.5 PBP: Add part constraints
+Phase 2.1.1.5 PBP: Add part constraints | Checksum: 28ce80f0f
+
+Time (s): cpu = 00:00:44 ; elapsed = 00:00:33 . Memory (MB): peak = 3387.148 ; gain = 672.184
+Phase 2.1.1 Partition Driven Placement | Checksum: 28ce80f0f
+
+Time (s): cpu = 00:00:44 ; elapsed = 00:00:33 . Memory (MB): peak = 3387.148 ; gain = 672.184
+Phase 2.1 Floorplanning | Checksum: 28ce80f0f
+
+Time (s): cpu = 00:00:44 ; elapsed = 00:00:33 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2.2 Update Timing before SLR Path Opt
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 28ce80f0f
+
+Time (s): cpu = 00:00:44 ; elapsed = 00:00:33 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2.3 Post-Processing in Floorplanning
+Phase 2.3 Post-Processing in Floorplanning | Checksum: 28ce80f0f
+
+Time (s): cpu = 00:00:44 ; elapsed = 00:00:34 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2.4 Global Placement Core
+
+Phase 2.4.1 UpdateTiming Before Physical Synthesis
+Phase 2.4.1 UpdateTiming Before Physical Synthesis | Checksum: 255df2519
+
+Time (s): cpu = 00:02:28 ; elapsed = 00:01:31 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 2.4.2 Physical Synthesis In Placer
+INFO: [Physopt 32-1035] Found 10 LUTNM shape to break, 1354 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 9, two critical 1, total 10, new lutff created 0
+INFO: [Physopt 32-1138] End 1 Pass. Optimized 647 nets or LUTs. Breaked 10 LUTs, combined 637 existing LUTs and moved 0 existing LUT
+INFO: [Physopt 32-1030] Pass 1. Identified 10 candidate driver sets for equivalent driver rewiring.
+INFO: [Physopt 32-661] Optimized 2 nets.  Re-placed 5 instances.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 2 nets or cells. Created 0 new cell, deleted 0 existing cell and moved 5 existing cells
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.031 . Memory (MB): peak = 3387.148 ; gain = 0.000
+INFO: [Physopt 32-65] No nets found for high-fanout optimization.
+INFO: [Physopt 32-232] Optimized 0 net. Created 0 new instance.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-712] Optimization is not feasible on net vio_pid_window_mV[15] due to MARK_DEBUG attribute.
+INFO: [Physopt 32-712] Optimization is not feasible on net vio_kick_base_mV[15] due to MARK_DEBUG attribute.
+INFO: [Physopt 32-712] Optimization is not feasible on net vio_kick_min_mV[15] due to MARK_DEBUG attribute.
+INFO: [Physopt 32-712] Optimization is not feasible on net vio_kick_final_mV[15] due to MARK_DEBUG attribute.
+INFO: [Physopt 32-712] Optimization is not feasible on net vio_sweep_start_mV[15] due to MARK_DEBUG attribute.
+INFO: [Physopt 32-712] Optimization is not feasible on net vio_sweep_trigger_mV[15] due to MARK_DEBUG attribute.
+INFO: [Physopt 32-712] Optimization is not feasible on net vio_sweep_final_mV[15] due to MARK_DEBUG attribute.
+INFO: [Physopt 32-456] No candidate cells for DSP register optimization found in the design.
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-1123] No candidate cells found for Shift Register to Pipeline optimization
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-1401] No candidate cells found for Shift Register optimization.
+INFO: [Physopt 32-677] No candidate cells for Shift Register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-526] No candidate cells for BRAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-846] No candidate cells for URAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-846] No candidate cells for URAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 3387.148 ; gain = 0.000
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |           10  |            637  |                   647  |           0  |           1  |  00:00:01  |
+|  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Equivalent Driver Rewiring                       |            0  |              0  |                     2  |           0  |           1  |  00:00:00  |
+|  Very High Fanout                                 |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  DSP Register                                     |            0  |              0  |                     0  |           7  |           1  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |           10  |            637  |                   649  |           7  |          10  |  00:00:01  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.4.2 Physical Synthesis In Placer | Checksum: 28a77c95f
+
+Time (s): cpu = 00:02:32 ; elapsed = 00:01:33 . Memory (MB): peak = 3387.148 ; gain = 672.184
+Phase 2.4 Global Placement Core | Checksum: 1ddacf69e
+
+Time (s): cpu = 00:02:42 ; elapsed = 00:01:39 . Memory (MB): peak = 3387.148 ; gain = 672.184
+Phase 2 Global Placement | Checksum: 1ddacf69e
+
+Time (s): cpu = 00:02:42 ; elapsed = 00:01:39 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 1d1e1eef0
+
+Time (s): cpu = 00:02:51 ; elapsed = 00:01:44 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 2993eb792
+
+Time (s): cpu = 00:02:56 ; elapsed = 00:01:48 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 3.3 Small Shape DP
+
+Phase 3.3.1 Small Shape Clustering
+Phase 3.3.1 Small Shape Clustering | Checksum: 21f80f6b2
+
+Time (s): cpu = 00:03:13 ; elapsed = 00:01:57 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 3.3.2 Slice Area Swap
+
+Phase 3.3.2.1 Slice Area Swap Initial
+Phase 3.3.2.1 Slice Area Swap Initial | Checksum: 28f92bd35
+
+Time (s): cpu = 00:03:23 ; elapsed = 00:02:03 . Memory (MB): peak = 3387.148 ; gain = 672.184
+Phase 3.3.2 Slice Area Swap | Checksum: 28f92bd35
+
+Time (s): cpu = 00:03:23 ; elapsed = 00:02:03 . Memory (MB): peak = 3387.148 ; gain = 672.184
+Phase 3.3 Small Shape DP | Checksum: 23b9123cf
+
+Time (s): cpu = 00:03:42 ; elapsed = 00:02:13 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 3.4 Re-assign LUT pins
+Phase 3.4 Re-assign LUT pins | Checksum: 24097c39f
+
+Time (s): cpu = 00:03:43 ; elapsed = 00:02:14 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 3.5 Pipeline Register Optimization
+Phase 3.5 Pipeline Register Optimization | Checksum: 22a7f84dd
+
+Time (s): cpu = 00:03:44 ; elapsed = 00:02:14 . Memory (MB): peak = 3387.148 ; gain = 672.184
+Phase 3 Detail Placement | Checksum: 22a7f84dd
+
+Time (s): cpu = 00:03:44 ; elapsed = 00:02:15 . Memory (MB): peak = 3387.148 ; gain = 672.184
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+
+Phase 4.1.1 Post Placement Optimization
+Post Placement Optimization Initialization | Checksum: 296bb3e61
+
+Phase 4.1.1.1 BUFG Insertion
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 2 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=0.008 | TNS=0.000 |
+Phase 1 Physical Synthesis Initialization | Checksum: 1bb5e3e7c
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.590 . Memory (MB): peak = 3411.152 ; gain = 0.000
+INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to netlist editing failed: 0.
+Ending Physical Synthesis Task | Checksum: 22070a814
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.745 . Memory (MB): peak = 3411.152 ; gain = 0.000
+Phase 4.1.1.1 BUFG Insertion | Checksum: 296bb3e61
+
+Time (s): cpu = 00:04:06 ; elapsed = 00:02:30 . Memory (MB): peak = 3411.152 ; gain = 696.188
+
+Phase 4.1.1.2 Post Placement Timing Optimization
+INFO: [Place 30-746] Post Placement Timing Summary WNS=0.409. For the most accurate timing information please run report_timing.
+Phase 4.1.1.2 Post Placement Timing Optimization | Checksum: 30f7058a7
+
+Time (s): cpu = 00:04:21 ; elapsed = 00:02:42 . Memory (MB): peak = 3435.125 ; gain = 720.160
+
+Time (s): cpu = 00:04:21 ; elapsed = 00:02:42 . Memory (MB): peak = 3435.125 ; gain = 720.160
+Phase 4.1 Post Commit Optimization | Checksum: 30f7058a7
+
+Time (s): cpu = 00:04:21 ; elapsed = 00:02:42 . Memory (MB): peak = 3435.125 ; gain = 720.160
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: 2aa69669e
+
+Time (s): cpu = 00:04:31 ; elapsed = 00:02:48 . Memory (MB): peak = 3513.992 ; gain = 799.027
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ________________________________________________________________________
+|           | Global Congestion | Long Congestion   | Short Congestion  |
+| Direction | Region Size       | Region Size       | Region Size       |
+|___________|___________________|___________________|___________________|
+|      North|                1x1|                1x1|                4x4|
+|___________|___________________|___________________|___________________|
+|      South|                1x1|                1x1|                4x4|
+|___________|___________________|___________________|___________________|
+|       East|                1x1|                1x1|                4x4|
+|___________|___________________|___________________|___________________|
+|       West|                1x1|                1x1|                4x4|
+|___________|___________________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: 2aa69669e
+
+Time (s): cpu = 00:04:31 ; elapsed = 00:02:48 . Memory (MB): peak = 3513.992 ; gain = 799.027
+Phase 4.3 Placer Reporting | Checksum: 2aa69669e
+
+Time (s): cpu = 00:04:31 ; elapsed = 00:02:48 . Memory (MB): peak = 3513.992 ; gain = 799.027
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.011 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Time (s): cpu = 00:04:31 ; elapsed = 00:02:48 . Memory (MB): peak = 3513.992 ; gain = 799.027
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 2d7ee9a8f
+
+Time (s): cpu = 00:04:31 ; elapsed = 00:02:49 . Memory (MB): peak = 3513.992 ; gain = 799.027
+Ending Placer Task | Checksum: 2376d2c4f
+
+Time (s): cpu = 00:04:31 ; elapsed = 00:02:49 . Memory (MB): peak = 3513.992 ; gain = 799.027
+162 Infos, 33 Warnings, 0 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:04:36 ; elapsed = 00:02:52 . Memory (MB): peak = 3513.992 ; gain = 799.027
+INFO: [Vivado 12-24838] Running report commands "report_control_sets, report_io, report_utilization" in parallel.
+Running report generation with 2 threads.
+INFO: [Vivado 12-24828] Executing command : report_io -file top_power_kicker_io_placed.rpt
+report_io: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.105 . Memory (MB): peak = 3513.992 ; gain = 0.000
+INFO: [Vivado 12-24828] Executing command : report_control_sets -verbose -file top_power_kicker_control_sets_placed.rpt
+report_control_sets: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.038 . Memory (MB): peak = 3513.992 ; gain = 0.000
+INFO: [Vivado 12-24828] Executing command : report_utilization -file top_power_kicker_utilization_placed.rpt -pb top_power_kicker_utilization_placed.pb
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.079 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Wrote PlaceDB: Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.040 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.037 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Write Physdb Complete: Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 3513.992 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker_placed.dcp' has been generated.
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xcau15p'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcau15p'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 8 CPUs
+
+Phase 1 Build RT Design
+Checksum: PlaceDB: ed370357 ConstDB: 0 ShapeSum: b38cfaaa RouteDB: 96a92e4e
+Nodegraph reading from file.  Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.520 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Post Restoration Checksum: NetGraph: 7324bd3b | NumContArr: 50bc2b6b | Constraints: 9e1c06e0 | Timing: c2a8fa9d
+Phase 1 Build RT Design | Checksum: 224a5ea23
+
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:07 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 2 Router Initialization
+
+Phase 2.1 Fix Topology Constraints
+Phase 2.1 Fix Topology Constraints | Checksum: 224a5ea23
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:07 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 2.2 Pre Route Cleanup
+Phase 2.2 Pre Route Cleanup | Checksum: 224a5ea23
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:07 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 2.3 Global Clock Net Routing
+ Number of Nodes with overlaps = 0
+Phase 2.3 Global Clock Net Routing | Checksum: 2d24ee8d1
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:09 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 2.4 Update Timing
+Phase 2.4 Update Timing | Checksum: 2f70be540
+
+Time (s): cpu = 00:00:23 ; elapsed = 00:00:13 . Memory (MB): peak = 3513.992 ; gain = 0.000
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.473  | TNS=0.000  | WHS=-0.076 | THS=-1.971 |
+
+
+Phase 2.5 Update Timing for Bus Skew
+
+Phase 2.5.1 Update Timing
+Phase 2.5.1 Update Timing | Checksum: 304643707
+
+Time (s): cpu = 00:00:36 ; elapsed = 00:00:20 . Memory (MB): peak = 3513.992 ; gain = 0.000
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.473  | TNS=0.000  | WHS=-0.092 | THS=-2.344 |
+
+Phase 2.5 Update Timing for Bus Skew | Checksum: 28f782dbe
+
+Time (s): cpu = 00:00:36 ; elapsed = 00:00:21 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0.00262233 %
+  Global Horizontal Routing Utilization  = 0.00202922 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 27735
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 24691
+  Number of Partially Routed Nets     = 3044
+  Number of Node Overlaps             = 0
+
+Phase 2 Router Initialization | Checksum: 2ffa12c6c
+
+Time (s): cpu = 00:00:37 ; elapsed = 00:00:21 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 3 Global Routing
+Phase 3 Global Routing | Checksum: 2ffa12c6c
+
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:21 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 4 Initial Routing
+
+Phase 4.1 Initial Net Routing Pass
+Phase 4.1 Initial Net Routing Pass | Checksum: 20fd0653e
+
+Time (s): cpu = 00:00:48 ; elapsed = 00:00:23 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Phase 4 Initial Routing | Checksum: 1f2c00189
+
+Time (s): cpu = 00:00:48 ; elapsed = 00:00:23 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 5 Rip-up And Reroute
+
+Phase 5.1 Global Iteration 0
+ Number of Nodes with overlaps = 7495
+ Number of Nodes with overlaps = 1224
+ Number of Nodes with overlaps = 297
+ Number of Nodes with overlaps = 114
+ Number of Nodes with overlaps = 58
+ Number of Nodes with overlaps = 41
+ Number of Nodes with overlaps = 22
+ Number of Nodes with overlaps = 15
+ Number of Nodes with overlaps = 11
+ Number of Nodes with overlaps = 6
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.925 | TNS=-29.668| WHS=-0.018 | THS=-0.040 |
+
+Phase 5.1 Global Iteration 0 | Checksum: 194dc996c
+
+Time (s): cpu = 00:02:38 ; elapsed = 00:01:07 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 5.2 Global Iteration 1
+ Number of Nodes with overlaps = 3371
+ Number of Nodes with overlaps = 345
+ Number of Nodes with overlaps = 113
+ Number of Nodes with overlaps = 42
+ Number of Nodes with overlaps = 34
+ Number of Nodes with overlaps = 21
+ Number of Nodes with overlaps = 16
+ Number of Nodes with overlaps = 11
+ Number of Nodes with overlaps = 7
+ Number of Nodes with overlaps = 6
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.161 | TNS=-0.162 | WHS=N/A    | THS=N/A    |
+
+Phase 5.2 Global Iteration 1 | Checksum: 22db4068b
+
+Time (s): cpu = 00:03:26 ; elapsed = 00:01:34 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 5.3 Global Iteration 2
+ Number of Nodes with overlaps = 2843
+ Number of Nodes with overlaps = 341
+ Number of Nodes with overlaps = 118
+ Number of Nodes with overlaps = 64
+ Number of Nodes with overlaps = 33
+ Number of Nodes with overlaps = 20
+ Number of Nodes with overlaps = 12
+ Number of Nodes with overlaps = 10
+ Number of Nodes with overlaps = 8
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 5
+ Number of Nodes with overlaps = 5
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.081  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 5.3 Global Iteration 2 | Checksum: 1a18653f8
+
+Time (s): cpu = 00:04:03 ; elapsed = 00:01:53 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Phase 5 Rip-up And Reroute | Checksum: 1a18653f8
+
+Time (s): cpu = 00:04:03 ; elapsed = 00:01:53 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 6 Delay and Skew Optimization
+
+Phase 6.1 Delay CleanUp
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.081  | TNS=0.000  | WHS=-0.023 | THS=-0.023 |
+
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.081  | TNS=0.000  | WHS=-0.023 | THS=-0.023 |
+
+Phase 6.1 Delay CleanUp | Checksum: 2335f1889
+
+Time (s): cpu = 00:04:10 ; elapsed = 00:01:57 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 6.2 Clock Skew Optimization
+Phase 6.2 Clock Skew Optimization | Checksum: 2335f1889
+
+Time (s): cpu = 00:04:10 ; elapsed = 00:01:57 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Phase 6 Delay and Skew Optimization | Checksum: 2335f1889
+
+Time (s): cpu = 00:04:10 ; elapsed = 00:01:57 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 7 Post Hold Fix
+
+Phase 7.1 Hold Fix Iter
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.081  | TNS=0.000  | WHS=0.011  | THS=0.000  |
+
+Phase 7.1 Hold Fix Iter | Checksum: 1be4cb63c
+
+Time (s): cpu = 00:04:14 ; elapsed = 00:01:59 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Phase 7 Post Hold Fix | Checksum: 1be4cb63c
+
+Time (s): cpu = 00:04:14 ; elapsed = 00:01:59 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 8 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 5.03899 %
+  Global Horizontal Routing Utilization  = 6.02964 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 8 Route finalize | Checksum: 1be4cb63c
+
+Time (s): cpu = 00:04:15 ; elapsed = 00:02:00 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 9 Verifying routed nets
+
+ Verification completed successfully
+Phase 9 Verifying routed nets | Checksum: 1be4cb63c
+
+Time (s): cpu = 00:04:15 ; elapsed = 00:02:00 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 10 Depositing Routes
+Phase 10 Depositing Routes | Checksum: 1be4cb63c
+
+Time (s): cpu = 00:04:17 ; elapsed = 00:02:01 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 11 Resolve XTalk
+Phase 11 Resolve XTalk | Checksum: 1be4cb63c
+
+Time (s): cpu = 00:04:17 ; elapsed = 00:02:01 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 12 Post Process Routing
+Phase 12 Post Process Routing | Checksum: 1be4cb63c
+
+Time (s): cpu = 00:04:18 ; elapsed = 00:02:01 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Phase 13 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=0.081  | TNS=0.000  | WHS=0.011  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 13 Post Router Timing | Checksum: 1be4cb63c
+
+Time (s): cpu = 00:04:18 ; elapsed = 00:02:01 . Memory (MB): peak = 3513.992 ; gain = 0.000
+Total Elapsed time in route_design: 121.329 secs
+
+Phase 14 Post-Route Event Processing
+Phase 14 Post-Route Event Processing | Checksum: 191e22bb4
+
+Time (s): cpu = 00:04:18 ; elapsed = 00:02:02 . Memory (MB): peak = 3513.992 ; gain = 0.000
+INFO: [Route 35-16] Router Completed Successfully
+Ending Routing Task | Checksum: 191e22bb4
+
+Time (s): cpu = 00:04:18 ; elapsed = 00:02:02 . Memory (MB): peak = 3513.992 ; gain = 0.000
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+185 Infos, 33 Warnings, 0 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:04:21 ; elapsed = 00:02:04 . Memory (MB): peak = 3513.992 ; gain = 0.000
+INFO: [Vivado 12-24828] Executing command : report_drc -file top_power_kicker_drc_routed.rpt -pb top_power_kicker_drc_routed.pb -rpx top_power_kicker_drc_routed.rpx
+Command: report_drc -file top_power_kicker_drc_routed.rpt -pb top_power_kicker_drc_routed.pb -rpx top_power_kicker_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker_drc_routed.rpt.
+report_drc completed successfully
+INFO: [Vivado 12-24828] Executing command : report_methodology -file top_power_kicker_methodology_drc_routed.rpt -pb top_power_kicker_methodology_drc_routed.pb -rpx top_power_kicker_methodology_drc_routed.rpx
+Command: report_methodology -file top_power_kicker_methodology_drc_routed.rpt -pb top_power_kicker_methodology_drc_routed.pb -rpx top_power_kicker_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 2 threads
+INFO: [Vivado_Tcl 2-1520] The results of Report Methodology are in file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker_methodology_drc_routed.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:00:15 ; elapsed = 00:00:09 . Memory (MB): peak = 3530.738 ; gain = 16.746
+INFO: [Vivado 12-24828] Executing command : report_timing_summary -max_paths 10 -file top_power_kicker_timing_summary_routed.rpt -pb top_power_kicker_timing_summary_routed.pb -rpx top_power_kicker_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Temperature grade: I, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+INFO: [Vivado 12-24838] Running report commands "report_incremental_reuse, report_route_status" in parallel.
+Running report generation with 2 threads.
+INFO: [Vivado 12-24828] Executing command : report_incremental_reuse -file top_power_kicker_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [Vivado 12-24828] Executing command : report_route_status -file top_power_kicker_route_status.rpt -pb top_power_kicker_route_status.pb
+INFO: [Vivado 12-24828] Executing command : report_power -file top_power_kicker_power_routed.rpt -pb top_power_kicker_power_summary_routed.pb -rpx top_power_kicker_power_routed.rpx
+Command: report_power -file top_power_kicker_power_routed.rpt -pb top_power_kicker_power_summary_routed.pb -rpx top_power_kicker_power_routed.rpx
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+202 Infos, 34 Warnings, 0 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+report_power: Time (s): cpu = 00:00:14 ; elapsed = 00:00:12 . Memory (MB): peak = 3534.168 ; gain = 3.430
+INFO: [Vivado 12-24828] Executing command : report_clock_utilization -file top_power_kicker_clock_utilization_routed.rpt
+WARNING: [Device 21-9320] Failed to find the Oracle tile group with name 'HSR_BOUNDARY_TOP'. This is required for Clock regions and Virtual grid.
+WARNING: [Device 21-2174] Failed to initialize Virtual grid.
+INFO: [Vivado 12-24828] Executing command : report_bus_skew -warn_on_violation -file top_power_kicker_bus_skew_routed.rpt -pb top_power_kicker_bus_skew_routed.pb -rpx top_power_kicker_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Temperature grade: I, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+generate_parallel_reports: Time (s): cpu = 00:00:46 ; elapsed = 00:00:30 . Memory (MB): peak = 3534.168 ; gain = 20.176
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.098 . Memory (MB): peak = 3537.555 ; gain = 3.387
+Wrote PlaceDB: Time (s): cpu = 00:00:04 ; elapsed = 00:00:01 . Memory (MB): peak = 3537.590 ; gain = 3.422
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3537.590 ; gain = 0.000
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.271 . Memory (MB): peak = 3537.590 ; gain = 0.000
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.039 . Memory (MB): peak = 3537.590 ; gain = 0.000
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 3537.590 ; gain = 0.000
+Write Physdb Complete: Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 3537.590 ; gain = 3.422
+INFO: [Common 17-1381] The checkpoint 'C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker_routed.dcp' has been generated.
+INFO: [Common 17-206] Exiting Vivado at Mon Sep 21 13:55:52 2026...
+
+*** Running vivado
+    with args -log top_power_kicker.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source top_power_kicker.tcl -notrace
+
+
+
+****** Vivado v2024.1 (64-bit)
+  **** SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+  **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+  **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+  **** Start of session at: Mon Sep 21 14:07:42 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source top_power_kicker.tcl -notrace
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1271]}  -suppress '. The existing rule will be replaced.
+WARNING: [Common 17-1361] You have specified a new message control rule that is equivalent to an existing rule with attributes ' -id {[BD 41-1306]}  -suppress '. The existing rule will be replaced.
+Command: open_checkpoint top_power_kicker_routed.dcp
+INFO: [Device 21-403] Loading part xcau15p-ffvb676-2-i
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.196 . Memory (MB): peak = 1324.797 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2052 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2024.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Read ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.092 . Memory (MB): peak = 1404.938 ; gain = 7.141
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+INFO: [Designutils 20-5722] Start Reading Physical Databases.
+Reading placement.
+Read Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.032 . Memory (MB): peak = 1771.031 ; gain = 0.000
+Reading placer database...
+Read Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.014 . Memory (MB): peak = 1771.031 ; gain = 0.000
+Read PlaceDB: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.883 . Memory (MB): peak = 1802.777 ; gain = 31.746
+Read PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1802.777 ; gain = 0.000
+Reading routing.
+Read RouteStorage: Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1940.965 ; gain = 138.188
+Read Physdb Files: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1940.965 ; gain = 169.934
+Restored from archive | CPU: 3.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1940.965 ; gain = 169.934
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 1940.965 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 316 instances were transformed.
+  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 272 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 16 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 4 instances
+  IBUFDS => IBUFDS (DIFFINBUF, IBUFCTRL): 17 instances
+  IOBUF => IOBUF (IBUFCTRL, INBUF, OBUFT): 1 instance 
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 2 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 4 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2024.1 (64-bit) build 5076996
+open_checkpoint: Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 1940.965 ; gain = 1526.895
+Command: write_bitstream -force top_power_kicker.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xcau15p'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcau15p'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/vivado/Vivado/2024.1/data/ip'.
+INFO: [DRC 23-27] Running DRC with 2 threads
+WARNING: [DRC DPIP-2] Input pipelining: DSP adc_mv_to_code4 input adc_mv_to_code4/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP adc_mv_to_code5 input adc_mv_to_code5/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP adc_window_mv_to_code_return3 input adc_window_mv_to_code_return3/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP kick_mv_to_code_return3 input kick_mv_to_code_return3/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP kick_mv_to_code_return3__0 input kick_mv_to_code_return3__0/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP kick_mv_to_code_return3__1 input kick_mv_to_code_return3__1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP sweep_mv_to_code_return3 input sweep_mv_to_code_return3/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP sweep_mv_to_code_return3__0 input sweep_mv_to_code_return3__0/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP sweep_mv_to_code_return3__1 input sweep_mv_to_code_return3__1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_logic/kick_tick_from_scan_return0 input u_logic/kick_tick_from_scan_return0/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_logic/kick_tick_from_scan_return0 input u_logic/kick_tick_from_scan_return0/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_logic/kick_tick_from_scan_return0__0 input u_logic/kick_tick_from_scan_return0__0/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_logic/kick_tick_from_scan_return0__0 input u_logic/kick_tick_from_scan_return0__0/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_logic/kick_tick_from_scan_return0__1 input u_logic/kick_tick_from_scan_return0__1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_logic/kick_tick_from_scan_return0__1 input u_logic/kick_tick_from_scan_return0__1/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_logic/kick_tick_from_scan_return0__2 input u_logic/kick_tick_from_scan_return0__2/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_logic/kick_tick_from_scan_return0__2 input u_logic/kick_tick_from_scan_return0__2/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_pd_pid_feedback/u_nkt_pid/d_prod input u_pd_pid_feedback/u_nkt_pid/d_prod/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_pd_pid_feedback/u_nkt_pid/d_prod input u_pd_pid_feedback/u_nkt_pid/d_prod/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_pd_pid_feedback/u_nkt_pid/i_accum_added input u_pd_pid_feedback/u_nkt_pid/i_accum_added/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_pd_pid_feedback/u_nkt_pid/i_accum_added input u_pd_pid_feedback/u_nkt_pid/i_accum_added/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_pd_pid_feedback/u_nkt_pid/i_accum_added input u_pd_pid_feedback/u_nkt_pid/i_accum_added/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_pd_pid_feedback/u_nkt_pid/sum_q input u_pd_pid_feedback/u_nkt_pid/sum_q/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPIP-2] Input pipelining: DSP u_pd_pid_feedback/u_nkt_pid/sum_q input u_pd_pid_feedback/u_nkt_pid/sum_q/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP adc_mv_to_code4 output adc_mv_to_code4/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP adc_mv_to_code5 output adc_mv_to_code5/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP adc_window_mv_to_code_return3 output adc_window_mv_to_code_return3/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP kick_mv_to_code_return3 output kick_mv_to_code_return3/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP kick_mv_to_code_return3__0 output kick_mv_to_code_return3__0/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP kick_mv_to_code_return3__1 output kick_mv_to_code_return3__1/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP sweep_mv_to_code_return3 output sweep_mv_to_code_return3/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP sweep_mv_to_code_return3__0 output sweep_mv_to_code_return3__0/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP sweep_mv_to_code_return3__1 output sweep_mv_to_code_return3__1/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP u_logic/kick_tick_from_scan_return0 output u_logic/kick_tick_from_scan_return0/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP u_logic/kick_tick_from_scan_return0__0 output u_logic/kick_tick_from_scan_return0__0/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP u_logic/kick_tick_from_scan_return0__1 output u_logic/kick_tick_from_scan_return0__1/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP u_logic/kick_tick_from_scan_return0__2 output u_logic/kick_tick_from_scan_return0__2/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP u_pd_pid_feedback/u_nkt_pid/i_accum_added output u_pd_pid_feedback/u_nkt_pid/i_accum_added/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-3] PREG Output pipelining: DSP u_pd_pid_feedback/u_nkt_pid/sum_q output u_pd_pid_feedback/u_nkt_pid/sum_q/P[47:0] is not pipelined (PREG=0). Pipelining the DSP48 output will improve performance and often saves power so it is suggested whenever possible to fully pipeline this function.  If this DSP48 function was inferred, it is suggested to describe an additional register stage after this function.  If the DSP48 was instantiated in the design, it is suggested to set the PREG attribute to 1.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP adc_mv_to_code4 multiplier stage adc_mv_to_code4/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP adc_mv_to_code5 multiplier stage adc_mv_to_code5/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP adc_window_mv_to_code_return3 multiplier stage adc_window_mv_to_code_return3/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP kick_mv_to_code_return3 multiplier stage kick_mv_to_code_return3/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP kick_mv_to_code_return3__0 multiplier stage kick_mv_to_code_return3__0/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP kick_mv_to_code_return3__1 multiplier stage kick_mv_to_code_return3__1/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP sweep_mv_to_code_return3 multiplier stage sweep_mv_to_code_return3/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP sweep_mv_to_code_return3__0 multiplier stage sweep_mv_to_code_return3__0/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP sweep_mv_to_code_return3__1 multiplier stage sweep_mv_to_code_return3__1/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP u_logic/kick_tick_from_scan_return0 multiplier stage u_logic/kick_tick_from_scan_return0/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP u_logic/kick_tick_from_scan_return0__0 multiplier stage u_logic/kick_tick_from_scan_return0__0/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP u_logic/kick_tick_from_scan_return0__1 multiplier stage u_logic/kick_tick_from_scan_return0__1/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP u_logic/kick_tick_from_scan_return0__2 multiplier stage u_logic/kick_tick_from_scan_return0__2/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP u_pd_pid_feedback/u_nkt_pid/i_accum_added multiplier stage u_pd_pid_feedback/u_nkt_pid/i_accum_added/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC DPOP-4] MREG Output pipelining: DSP u_pd_pid_feedback/u_nkt_pid/sum_q multiplier stage u_pd_pid_feedback/u_nkt_pid/sum_q/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A3' of cell dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/temp_curid[31]_i_1 (pin dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/temp_curid[31]_i_1/I0) is not included in the LUT equation: 'O5=(A5*A2)+(A5*(~A2)*(~A1))+((~A5))'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A4' of cell dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/temp_curid[31]_i_1 (pin dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/temp_curid[31]_i_1/I1) is not included in the LUT equation: 'O5=(A5*A2)+(A5*(~A2)*(~A1))+((~A5))'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A5' of cell dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.id_state[0]_i_1 (pin dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.id_state[0]_i_1/I0) is not included in the LUT equation: 'O6=(A6+~A6)*((A3))'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
+WARNING: [DRC RTSTAT-10] No routable loads: 121 net(s) have no routable loads. The problem bus(es) and/or net(s) are dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/TMS, u_hardware/u_adc_phy/adc_data_a_d0[13:0], u_hardware/u_adc_phy/adc_data_b_d0[13:0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_2_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.rd/gr1.gr1_int.rfwft/aempty_fwft_i, dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_CTL/ctl_reg[2:0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_CTL/ctl_reg_en_2[1], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD1/ctl_reg_en_2[1], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_capture[0], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_drck[0], dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_switch/m_bscan_runtest[0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_2_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.rd_rst_reg[0], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_2_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_2_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/rstblk/ngwrdrst.grst.wr_rst_reg[2], dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_WR/U_WR_FIFO/SUBCORE_FIFO.xsdbm_v3_0_2_wrfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwhf.whf/overflow, dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD6_RD/U_RD_FIFO/SUBCORE_FIFO.xsdbm_v3_0_2_rdfifo_inst/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gl0.wr/gwhf.whf/overflow... and (the first 15 of 62 listed).
+INFO: [Vivado 12-3199] DRC finished with 0 Errors, 58 Warnings
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+INFO: [Designutils 20-2272] Running write_bitstream with 2 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Bitstream compression saved 15115008 bits.
+Writing bitstream ./top_power_kicker.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Project 1-1876] WebTalk data collection is mandatory when using a ULT device. To see the specific WebTalk data collected for your design, open the usage_statistics_webtalk.html or usage_statistics_webtalk.xml file in the implementation directory.
+INFO: [Common 17-83] Releasing license: Implementation
+23 Infos, 91 Warnings, 0 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:28 ; elapsed = 00:00:19 . Memory (MB): peak = 2284.512 ; gain = 343.547
+INFO: [Common 17-206] Exiting Vivado at Mon Sep 21 14:08:34 2026...
+[Mon Sep 21 14:08:35 2026] impl_1 finished
+wait_on_runs: Time (s): cpu = 00:00:00 ; elapsed = 00:01:06 . Memory (MB): peak = 3207.801 ; gain = 0.000
+# set impl_status [get_property STATUS [get_runs impl_1]]
+# if {![string match "*write_bitstream Complete*" $impl_status]} {
+#     error "Bitstream generation failed: $impl_status"
+# }
+# puts "IMPL_STATUS=$impl_status"
+IMPL_STATUS=write_bitstream Complete!
+# set bit_candidates [glob -nocomplain [file join $script_dir power-kicker-fast-feedback-v1.runs impl_1 *.bit]]
+# puts "BIT_CANDIDATES=$bit_candidates"
+BIT_CANDIDATES=C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker.bit
+# close_project
+# pk_assert_project_inputs
+PROJECT_INPUTS=PASS (portable sources, no legacy/generated duplicates)
+INFO: [Common 17-206] Exiting Vivado at Mon Sep 21 14:08:35 2026...

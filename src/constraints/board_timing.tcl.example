@@ -1,0 +1,22 @@
+# Copy to board_timing.tcl AFTER obtaining board/measurement evidence.
+# Empty fields are intentional: they are not zero-delay assumptions.
+# All numeric timing values are in ns; hex integer register values are accepted.
+# See TIMING_CONSTRAINTS.md for definitions and the signoff procedure.
+set ::power_kicker_io::profile [dict create \
+    schema_version 1 \
+    validated 0 \
+    board_revision {} \
+    evidence {} \
+    adc_reg16 0x00 \
+    adc_reg17 0x85 \
+    dac_reg16 0x00 \
+    adc_period_ns 4.000 \
+    dac_period_ns 2.000 \
+    adc_data_lead_min_ns {} \
+    adc_data_lead_max_ns {} \
+    adc_board_skew_min_ns {} \
+    adc_board_skew_max_ns {} \
+    adc_margin_ns {} \
+    dac_board_skew_min_ns {} \
+    dac_board_skew_max_ns {} \
+    dac_margin_ns {}]

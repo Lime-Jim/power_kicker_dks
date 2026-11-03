@@ -1,0 +1,9 @@
+PASS: tb_control_regression
+PASS: tb_feedback_regression
+PASS: tb_adc_capture_regression
+PASS: tb_vio_uart_regression
+PASS: tb_pid_delay_regression
+PASS: tb_dac_regression
+PASS: tb_capture_phase_regression
+PASS: test_io_timing_constraints
+PASS: test_vio_helpers

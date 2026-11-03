@@ -1,0 +1,39 @@
+create_project without -force smoke test: 2026-09-08
+Result: Vivado refused existing .srcs/.cache/.hw/.ip_user_files; did not mutate .srcs inputs.
+SHA256_BEFORE_AFTER=PASS (29 source inputs, no changes)
+METADATA_ONLY_RECREATE_AND_REOPEN=PASS (29 source inputs unchanged after both Vivado invocations)
+ACTIVE_IPS=clk_wiz_1 ila_1 vio_0 vio_pid (all Up-to-date)
+SYNTH_TOP=top_power_kicker
+SIM_TOP=tb_control_regression (top_auto_set=0)
+CANONICAL_INPUTS=30 XPR-listed files plus required constraints/adc_dac_io_timing.tcl
+PROJECT_INPUTS=PASS (portable references, no missing sources, legacy IP or generated-HDL duplicates)
+
+55FAEA4A1D6E6685D731C6B515FE3CD78371EEB6C2074C1F91CB7373E3CCB2D0  power-kicker-fast-feedback-v1.srcs\constrs_1\new\kicker.xdc
+FCD67DAD31B7D46525B686CBC0CFFD1FA9E10C5A3F6A08CAC0C8FD63530693D0  power-kicker-fast-feedback-v1.srcs\sources_1\ip\clk_wiz_1.xcix
+C6D4BF11C209D80669C8544EAA24E9430C4FA3E9E5129CC2B274FE173F6E7699  power-kicker-fast-feedback-v1.srcs\sources_1\ip\ila_1.xcix
+61FFBCBB75BA18426E9F19C55D3608D2A5F531F296F61EF6C5A0A9BF259DA244  power-kicker-fast-feedback-v1.srcs\sources_1\ip\vio_0\vio_0.xci
+BC6124A00BE5C275DBA9CE60E406376451ED0D744EAED9833D86C73957B7DA16  power-kicker-fast-feedback-v1.srcs\sources_1\ip\vio_pid\vio_pid.xci
+2CB930A996BEF325FBE9BEDD595BD5640CE6806C255834628A82F63D8D20ABF0  power-kicker-fast-feedback-v1.srcs\sources_1\new\ad9122_config.v
+5BD9460BD0EE1AF3244FFBC8DEED1EBBB72B92512800DA05551734C50D1CDB37  power-kicker-fast-feedback-v1.srcs\sources_1\new\ad9516_config.v
+E1F0D7E9A9EB6C92D46A024A68C74AA55EDB8DC5EF37FB924B964353FDF59416  power-kicker-fast-feedback-v1.srcs\sources_1\new\ad9643_config.v
+CAA947053F8F2CDE984C688FFE5789653C8FE2C5C94705E889D124583055E4A6  power-kicker-fast-feedback-v1.srcs\sources_1\new\control.v
+C442C9A077977ED9F674E2FCC226D432E41E405DE8722D470F1D1D54EEEC7192  power-kicker-fast-feedback-v1.srcs\sources_1\new\key_filter.v
+E419C00A6A1037C32CF2278369CAA9A6EDC2747434672BED739292E3CDE44F2E  power-kicker-fast-feedback-v1.srcs\sources_1\new\pd_adc_capture.v
+F433146BEDCEC6EDE4B456507B1FF75928BA901A1E479DEC848030B63057537E  power-kicker-fast-feedback-v1.srcs\sources_1\new\pd_pid_feedback.v
+E01101F290C9EBBFBD1D974105A54FB1FDC9831CEC772DA5CDDB19C6248DE5B8  power-kicker-fast-feedback-v1.srcs\sources_1\new\pid_core_signed.v
+829CC67F5A90AFF6658A0FEBB56E5D1C3BB0443BE88431261F7AB96F0F83FAA2  power-kicker-fast-feedback-v1.srcs\sources_1\new\reset_sync.v
+B57019633F63BBBACCB913C0F1B9A7BA6E4A731019838BC85BDBC64E29DA4D83  power-kicker-fast-feedback-v1.srcs\sources_1\new\spi_config.v
+3D57B180A99BEB409ADCA49715F41483E676EC84A29A89C2C878FF7626BCBEEA  power-kicker-fast-feedback-v1.srcs\sources_1\new\spi_config8.v
+4724E70085FEB113ECE52F7ECFFE778430AF3A40F45EB44F2B5C51AC657C2237  power-kicker-fast-feedback-v1.srcs\sources_1\new\spi_config8r.v
+44FEF44FA6A316FF968DAA353661397F1B698776B6FA7E4F99916176BBDFDEFA  power-kicker-fast-feedback-v1.srcs\sources_1\new\spi_config_top.v
+C572FEE9CF8989D119198327FDF0972D64B194588801269EEE4712829EE1C2D8  power-kicker-fast-feedback-v1.srcs\sources_1\new\spi_master.v
+5240A49D11A39EBE6531BFB2A5414A4232EAD24EA4AF5B8D53B61E10DFC88864  power-kicker-fast-feedback-v1.srcs\sources_1\new\spi_master8.v
+42333EB039A7E31B11CA670A2BABE6BFA8A6FCD9941955BCFF3089647294F2F8  power-kicker-fast-feedback-v1.srcs\sources_1\new\spi_st.v
+E50EA924290D070D607380434E4D3A7E643076BEFAB191393E987209046ECE11  power-kicker-fast-feedback-v1.srcs\sources_1\new\spi_st8.v
+0F1F7E6DD09F5D66D86AC18E3CB5943C53DDFCBF533AFFCB8DC8800F1E234A69  power-kicker-fast-feedback-v1.srcs\sources_1\new\test_ad9122.v
+9E2E8D37700105C6E44E2267FF3C9A443F8F024690A60D09C97DFECAC8AC029D  power-kicker-fast-feedback-v1.srcs\sources_1\new\test_ad9643.v
+05B553DF2A90011434A7BF4A37A1504260C646FEB7DBDBE4B775547B265F0DB3  power-kicker-fast-feedback-v1.srcs\sources_1\new\top_power_kicker.v
+E0515EC05A527E21365379D7362D9075854EAFFBF48274B58AC828752C25B714  power-kicker-fast-feedback-v1.srcs\sources_1\new\top_test.v
+26D83FE3ACEC9D3BD7EA7AE0273F1A37005A60649FE9D4A5E6F3CC171E0EBBBF  power-kicker-fast-feedback-v1.srcs\sources_1\new\uart_power_kick_params.v
+503A4879F78C112242C45CE9A74AC1D8BFA739AE153B948A72205AE41D7BEFB6  power-kicker-fast-feedback-v1.srcs\sources_1\new\uart_rx.v
+667568AEDE32E45F10982807927261E864604186ABA5D85104DD265D12BF6060  power-kicker-fast-feedback-v1.srcs\sources_1\new\uart_tx.v

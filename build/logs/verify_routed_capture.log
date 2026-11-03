@@ -1,0 +1,110 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Mon Sep 21 14:09:10 2026
+# Process ID: 4812
+# Current directory: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update
+# Command line: vivado.exe -mode batch -source verify_routed_capture.tcl -log verify_routed_capture.log -journal verify_routed_capture.jou
+# Log file: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verify_routed_capture.log
+# Journal file: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update\verify_routed_capture.jou
+# Running On        :DESKTOP-R7OLA88
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :12th Gen Intel(R) Core(TM) i5-12400
+# CPU Frequency     :2496 MHz
+# CPU Physical cores:6
+# CPU Logical cores :12
+# Host memory       :16908 MB
+# Swap memory       :1073 MB
+# Total Virtual     :17982 MB
+# Available Virtual :7136 MB
+#-----------------------------------------------------------
+source verify_routed_capture.tcl
+# set dir [file dirname [file normalize [info script]]]
+# open_checkpoint [file join $dir power-kicker-fast-feedback-v1.runs impl_1 top_power_kicker_routed.dcp]
+Command: open_checkpoint C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/power-kicker-fast-feedback-v1.runs/impl_1/top_power_kicker_routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.035 . Memory (MB): peak = 428.277 ; gain = 6.273
+INFO: [Device 21-403] Loading part xcau15p-ffvb676-2-i
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.200 . Memory (MB): peak = 1326.137 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2052 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2024.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Read ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.075 . Memory (MB): peak = 1405.645 ; gain = 7.254
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+INFO: [Designutils 20-5722] Start Reading Physical Databases.
+Reading placement.
+Read Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.032 . Memory (MB): peak = 1773.062 ; gain = 0.000
+Reading placer database...
+Read Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.014 . Memory (MB): peak = 1773.062 ; gain = 0.000
+Read PlaceDB: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.863 . Memory (MB): peak = 1804.141 ; gain = 31.078
+Read PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1804.141 ; gain = 0.000
+Reading routing.
+Read RouteStorage: Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1941.250 ; gain = 137.109
+Read Physdb Files: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1941.250 ; gain = 168.188
+Restored from archive | CPU: 4.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1941.250 ; gain = 168.188
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 1941.250 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 316 instances were transformed.
+  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 272 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 16 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 4 instances
+  IBUFDS => IBUFDS (DIFFINBUF, IBUFCTRL): 17 instances
+  IOBUF => IOBUF (IBUFCTRL, INBUF, OBUFT): 1 instance 
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 2 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 4 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2024.1 (64-bit) build 5076996
+open_checkpoint: Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 1941.250 ; gain = 1527.742
+# set out [file join $dir verification final_checkpoint]
+# file mkdir $out
+# set failed 0
+# proc check_paths {label} {
+#     global failed out
+#     foreach kind {min max} {
+#         set paths [get_timing_paths -delay_type $kind -max_paths 10 -nworst 1]
+#         if {![llength $paths]} {error "Missing $kind paths"}
+#         set worst [get_property SLACK [lindex $paths 0]]
+#         puts "FRESH_CHECK $label $kind $worst"
+#         foreach p $paths {
+#             if {[get_property SLACK $p] < 0} {
+#                 set failed 1
+#                 report_timing -of_objects $p -path_type full_clock_expanded -file [file join $out ${label}_${kind}_negative.rpt]
+#             }
+#         }
+#     }
+# }
+# check_paths reopened
+get_timing_paths: Time (s): cpu = 00:00:13 ; elapsed = 00:00:08 . Memory (MB): peak = 2240.383 ; gain = 299.133
+FRESH_CHECK reopened min 0.011
+FRESH_CHECK reopened max 0.136
+# report_timing_summary -delay_type min_max -report_unconstrained -file [file join $out timing_summary.rpt]
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+# report_cdc -details -file [file join $out cdc.rpt]
+INFO: [Timing 38-433] Consider using Xilinx recommended XPM_CDC modules to avoid Critical severities
+INFO: [Timing 38-314] The report_cdc command only analyzes and reports clock domain crossing paths where clocks have been defined on both source and destination sides. Ports with no input delay constraint are skipped. Please run check_timing to verify there are no missing clock definitions in your design, nor any unconstrained input port.
+# report_methodology -file [file join $out methodology.rpt]
+Command: report_methodology -file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/final_checkpoint/methodology.rpt
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 2 threads
+INFO: [Vivado_Tcl 2-1520] The results of Report Methodology are in file C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/final_checkpoint/methodology.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:00:16 ; elapsed = 00:00:09 . Memory (MB): peak = 2361.438 ; gain = 106.309
+# check_paths after_reports
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+FRESH_CHECK after_reports min 0.011
+FRESH_CHECK after_reports max 0.136
+# if {$failed} {error "Fresh routed checkpoint audit found negative slack"}
+# puts "FRESH_CHECKPOINT=PASS"
+FRESH_CHECKPOINT=PASS
+# close_design
+INFO: [Common 17-206] Exiting Vivado at Mon Sep 21 14:10:02 2026...

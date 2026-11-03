@@ -1,0 +1,457 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Tue Sep  8 11:31:19 2026
+# Process ID: 18272
+# Current directory: C:/Users/user/Desktop/power-kicking_handoff_20260907/verification/recreate_smoke
+# Command line: vivado.exe -mode batch -source C:/Users/user/Desktop/power-kicking_handoff_20260907/verification/recreate_smoke/verify_recreated_project.tcl -log verify_persisted_timing_and_strict_gate.log -journal verify_persisted_timing_and_strict_gate.jou
+# Log file: C:/Users/user/Desktop/power-kicking_handoff_20260907/verification/recreate_smoke/verify_persisted_timing_and_strict_gate.log
+# Journal file: C:/Users/user/Desktop/power-kicking_handoff_20260907/verification/recreate_smoke\verify_persisted_timing_and_strict_gate.jou
+# Running On        :DESKTOP-R7OLA88
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :12th Gen Intel(R) Core(TM) i5-12400
+# CPU Frequency     :2496 MHz
+# CPU Physical cores:6
+# CPU Logical cores :12
+# Host memory       :16908 MB
+# Swap memory       :1763 MB
+# Total Virtual     :18672 MB
+# Available Virtual :5041 MB
+#-----------------------------------------------------------
+source C:/Users/user/Desktop/power-kicking_handoff_20260907/verification/recreate_smoke/verify_recreated_project.tcl
+# set smoke_dir [file dirname [file normalize [info script]]]
+# source [file join $smoke_dir project_manifest.tcl]
+## set pk_project_dir [file dirname [file normalize [info script]]]
+## set pk_project_name power-kicker-fast-feedback-v1
+## set pk_rtl_names {
+##     ad9122_config ad9516_config ad9643_config control key_filter
+##     pd_adc_capture pd_pid_feedback pid_core_signed reset_sync
+##     spi_config spi_config8 spi_config8r spi_config_top
+##     spi_master spi_master8 spi_st spi_st8
+##     test_ad9122 test_ad9643 top_test uart_rx uart_tx
+##     uart_power_kick_params top_power_kicker
+## }
+## set pk_design_files {}
+## foreach name $pk_rtl_names {
+##     lappend pk_design_files [file join $pk_project_dir $pk_project_name.srcs sources_1 new $name.v]
+## }
+## set pk_ip_files [list \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip clk_wiz_1.xcix] \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip ila_1.xcix] \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip vio_0 vio_0.xci] \
+##     [file join $pk_project_dir $pk_project_name.srcs sources_1 ip vio_pid vio_pid.xci]]
+## set pk_xdc [file join $pk_project_dir $pk_project_name.srcs constrs_1 new kicker.xdc]
+## set pk_timing_entry [file join $pk_project_dir constraints load_external_timing.tcl]
+## set pk_sim_top [file join $pk_project_dir tests tb_control_regression.sv]
+## set pk_aux_files [list [file join $pk_project_dir constraints adc_dac_io_timing.tcl]]
+## proc pk_assert_project_inputs {} {
+##     global pk_design_files pk_ip_files pk_xdc pk_sim_top pk_project_dir pk_project_name pk_aux_files pk_timing_entry
+##     foreach path [concat $pk_design_files $pk_ip_files $pk_aux_files [list $pk_xdc $pk_sim_top $pk_timing_entry]] {
+##         if {![file isfile $path]} { error "Required source is missing: $path" }
+##     }
+##     set fd [open [file join $pk_project_dir $pk_project_name.xpr] r]
+##     set xml [read $fd]
+##     close $fd
+##     foreach path [concat $pk_design_files $pk_ip_files [list $pk_xdc $pk_sim_top $pk_timing_entry]] {
+##         set relative [string range $path [expr {[string length $pk_project_dir] + 1}] end]
+##         set portable [string map [list "$pk_project_name.srcs/" {$PSRCDIR/}] $relative]
+##         if {$portable eq $relative} { set portable "\$PPRDIR/$relative" }
+##         if {[string first "<File Path=\"$portable\"" $xml] < 0} {
+##             error "Canonical source not referenced by XPR: $portable. Run recreate_project.tcl."
+##         }
+##     }
+##     # Check file references, not Vivado's harmless historical Project Path field.
+##     foreach {whole path} [regexp -all -inline {<File Path="([^"]+)"} $xml] {
+##         if {[string match {*../*} $path] || [string match {*$PGENDIR*} $path] ||
+##             [string match {*/synth/*.v} $path] || [string match {*/hdl/*.v} $path]} {
+##             error "Stale/generated source reference in XPR: $path. Run recreate_project.tcl with the GUI project closed."
+##         }
+##         if {![string match {$PSRCDIR/*} $path] && ![string match {$PPRDIR/*} $path]} {
+##             error "Non-portable source reference in XPR: $path"
+##         }
+##     }
+##     if {[string first XSimWcfgFile $xml] >= 0} {
+##         error "Unexpected waveform configuration reference in XPR"
+##     }
+##     foreach name {Triangle_rom sin_rom square_rom ila_0} {
+##         if {[regexp "<FileSet Name=\"$name\"" $xml]} {
+##             error "Inactive legacy IP is back in the project: $name"
+##         }
+##     }
+##     puts "PROJECT_INPUTS=PASS (portable sources, no legacy/generated duplicates)"
+## }
+## proc pk_configure_project {} {
+##     global pk_timing_entry
+##     set_property top top_power_kicker [get_filesets sources_1]
+##     set_property top_auto_set false [get_filesets sim_1]
+##     set_property top tb_control_regression [get_filesets sim_1]
+##     set_property xsim.simulate.runtime all [get_filesets sim_1]
+##     set timing_file [get_files $pk_timing_entry]
+##     set_property FILE_TYPE Tcl $timing_file
+##     set_property USED_IN_SYNTHESIS false $timing_file
+##     set_property USED_IN_IMPLEMENTATION true $timing_file
+##     set_property PROCESSING_ORDER LATE $timing_file
+##     update_compile_order -fileset sources_1
+##     update_compile_order -fileset sim_1
+## }
+# pk_assert_project_inputs
+PROJECT_INPUTS=PASS (portable sources, no legacy/generated duplicates)
+# open_project [file join $smoke_dir power-kicker-fast-feedback-v1.xpr]
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'C:/Users/user/Desktop/power-kicking_handoff_20260907/verification/recreate_smoke/power-kicker-fast-feedback-v1.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/vivado2024/Vivado/2024.1/data/ip'.
+open_project: Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 673.859 ; gain = 261.371
+# set actual_ips [lsort [get_property NAME [get_ips -quiet]]]
+# set expected_ips [lsort {clk_wiz_1 ila_1 vio_0 vio_pid}]
+# puts "RECREATED_ACTIVE_IPS=$actual_ips"
+RECREATED_ACTIVE_IPS=clk_wiz_1 ila_1 vio_0 vio_pid
+# if {$actual_ips ne $expected_ips} { error "Unexpected active IP list: $actual_ips" }
+# set synth_top [get_property TOP [get_filesets sources_1]]
+# set sim_top [get_property TOP [get_filesets sim_1]]
+# set sim_auto [get_property TOP_AUTO_SET [get_filesets sim_1]]
+# puts "RECREATED_SYNTH_TOP=$synth_top"
+RECREATED_SYNTH_TOP=top_power_kicker
+# puts "RECREATED_SIM_TOP=$sim_top"
+RECREATED_SIM_TOP=tb_control_regression
+# puts "RECREATED_SIM_TOP_AUTO_SET=$sim_auto"
+RECREATED_SIM_TOP_AUTO_SET=0
+# if {$synth_top ne "top_power_kicker"} { error "Unexpected synthesis top" }
+# if {$sim_top ne "tb_control_regression"} { error "Unexpected simulation top" }
+# if {$sim_auto} { error "Simulation top must be fixed" }
+# set timing_file [get_files $pk_timing_entry]
+# if {[llength $timing_file] != 1} { error "Expected exactly one external timing entry" }
+# foreach {property expected} {
+#     FILE_TYPE TCL
+#     PROCESSING_ORDER LATE
+#     USED_IN_SYNTHESIS 0
+#     USED_IN_IMPLEMENTATION 1
+# } {
+#     set actual [get_property $property $timing_file]
+#     puts "PERSISTED_TIMING_ENTRY_$property=$actual"
+#     if {$actual ne $expected} { error "Timing entry $property expected $expected, actual $actual" }
+# }
+PERSISTED_TIMING_ENTRY_FILE_TYPE=TCL
+PERSISTED_TIMING_ENTRY_PROCESSING_ORDER=LATE
+PERSISTED_TIMING_ENTRY_USED_IN_SYNTHESIS=0
+PERSISTED_TIMING_ENTRY_USED_IN_IMPLEMENTATION=1
+# puts "PERSISTED_TIMING_ENTRY_USED_IN=[get_property USED_IN $timing_file]"
+PERSISTED_TIMING_ENTRY_USED_IN=implementation
+# set source_count 0
+# foreach path [concat $pk_design_files $pk_ip_files [list $pk_xdc $pk_sim_top $pk_timing_entry]] {
+#     if {![file isfile $path]} { error "Required local input missing: $path" }
+#     incr source_count
+# }
+# if {![file isfile [file join $smoke_dir constraints adc_dac_io_timing.tcl]]} {
+#     error "Required external I/O constraints helper missing"
+# }
+# puts "RECREATED_REQUIRED_INPUTS=$source_count"
+RECREATED_REQUIRED_INPUTS=31
+# report_ip_status -file [file join $smoke_dir recreated_ip_status.rpt]
+# report_compile_order -fileset sources_1 -used_in synthesis -file [file join $smoke_dir recreated_synthesis_compile_order.rpt]
+WARNING: [Vivado 12-3460] The report_compile_order switch '-fileset <fileset>' has been deprecated in favor of '-of_objects <fileset>' and this switch will be removed in a future release
+INFO: [Vivado 12-3442] The output from report_compile_order is primarily targeted for human readability and ease of use. The 'get_files' command, with the -compile_order and -used_in options, produces this same information in a format that is better suited for automated scripts.
+# close_project
+# pk_assert_project_inputs
+PROJECT_INPUTS=PASS (portable sources, no legacy/generated duplicates)
+# source [file join $smoke_dir constraints adc_dac_io_timing.tcl]
+## namespace eval ::power_kicker_io {
+##     variable script_dir [file dirname [file normalize [info script]]]
+##     variable profile {}
+##     variable profile_path {}
+##     variable status PROVISIONAL_NOT_LOADED
+##     variable reasons {}
+## }
+## proc ::power_kicker_io::load_profile {} {
+##     variable script_dir
+##     variable profile
+##     variable profile_path
+##     variable status
+##     variable reasons
+##     set profile {}
+##     set reasons {}
+##     set profile_path [file join $script_dir board_timing.tcl]
+##     if {[info exists ::env(POWER_KICKER_BOARD_TIMING)] &&
+##         $::env(POWER_KICKER_BOARD_TIMING) ne {}} {
+##         set profile_path [file normalize $::env(POWER_KICKER_BOARD_TIMING)]
+##     }
+##     if {![file isfile $profile_path]} {
+##         set status PROVISIONAL_MISSING_BOARD_PROFILE
+##         set reasons [list "Missing board timing profile: $profile_path"]
+##         return 0
+##     }
+##     uplevel #0 [list source $profile_path]
+##     return [validate_profile]
+## }
+## proc ::power_kicker_io::validate_profile {} {
+##     variable profile
+##     variable status
+##     variable reasons
+##     set reasons {}
+##     set required {
+##         schema_version validated board_revision evidence
+##         adc_reg16 adc_reg17 dac_reg16 adc_period_ns dac_period_ns
+##         adc_data_lead_min_ns adc_data_lead_max_ns
+##         adc_board_skew_min_ns adc_board_skew_max_ns adc_margin_ns
+##         dac_board_skew_min_ns dac_board_skew_max_ns dac_margin_ns
+##     }
+##     foreach key $required {
+##         if {![dict exists $profile $key] || [dict get $profile $key] eq {}} {
+##             lappend reasons "Unspecified timing field: $key"
+##         }
+##     }
+##     if {[llength $reasons]} {
+##         set status PROVISIONAL_INCOMPLETE_BOARD_PROFILE
+##         return 0
+##     }
+##     foreach key {
+##         schema_version validated adc_reg16 adc_reg17 dac_reg16
+##     } {
+##         if {![string is integer -strict [dict get $profile $key]]} {
+##             error "Board timing field $key must be an integer"
+##         }
+##     }
+##     if {[dict get $profile schema_version] != 1} {
+##         error "Unsupported board timing profile schema"
+##     }
+##     # These values match the committed SPI tables. Re-review the model whenever
+##     # those tables change; a different phase setting must not silently pass.
+##     foreach {key expected} {adc_reg16 0 adc_reg17 133 dac_reg16 0} {
+##         if {[dict get $profile $key] != $expected} {
+##             error "Timing profile $key does not match the current SPI configuration ($expected)"
+##         }
+##     }
+##     foreach key {
+##         adc_period_ns dac_period_ns adc_data_lead_min_ns adc_data_lead_max_ns
+##         adc_board_skew_min_ns adc_board_skew_max_ns adc_margin_ns
+##         dac_board_skew_min_ns dac_board_skew_max_ns dac_margin_ns
+##     } {
+##         set value [dict get $profile $key]
+##         if {![string is double -strict $value] ||
+##             [catch {expr {abs(double($value)) < 1.0e6}} finite] || !$finite} {
+##             error "Board timing field $key must be a finite time in ns"
+##         }
+##     }
+##     foreach {key expected} {adc_period_ns 4.0 dac_period_ns 2.0} {
+##         if {abs([dict get $profile $key] - $expected) > 0.000001} {
+##             error "$key must match the current XDC clock period ($expected ns)"
+##         }
+##     }
+##     foreach {low high} {
+##         adc_data_lead_min_ns adc_data_lead_max_ns
+##         adc_board_skew_min_ns adc_board_skew_max_ns
+##         dac_board_skew_min_ns dac_board_skew_max_ns
+##     } {
+##         if {[dict get $profile $low] > [dict get $profile $high]} {
+##             error "Board timing range is reversed: $low > $high"
+##         }
+##     }
+##     foreach key {adc_margin_ns dac_margin_ns} {
+##         if {[dict get $profile $key] < 0} {
+##             error "$key must be nonnegative"
+##         }
+##     }
+##     # Evaluate even an unvalidated complete profile to reject impossible eyes.
+##     calculate_delays
+##     if {[dict get $profile validated] != 1} {
+##         set status PROVISIONAL_UNVALIDATED_BOARD_PROFILE
+##         set reasons [list {Board profile has not been validated against the actual hardware}]
+##         return 0
+##     }
+##     set status PROFILE_VALIDATED_AWAITING_STA
+##     return 1
+## }
+## proc ::power_kicker_io::calculate_delays {} {
+##     variable profile
+##     set adc_ui [expr {[dict get $profile adc_period_ns] / 2.0}]
+##     set dac_ui [expr {[dict get $profile dac_period_ns] / 2.0}]
+##     # A positive lead means ADC data changes BEFORE its sampling DCO edge.
+##     # Reference each transition to the preceding opposite DCO edge, so Vivado
+##     # sees a positive half-cycle launch-to-capture interval on both edges.
+##     set adc_min [expr {$adc_ui - [dict get $profile adc_data_lead_max_ns] +
+##         [dict get $profile adc_board_skew_min_ns] - [dict get $profile adc_margin_ns]}]
+##     set adc_max [expr {$adc_ui - [dict get $profile adc_data_lead_min_ns] +
+##         [dict get $profile adc_board_skew_max_ns] + [dict get $profile adc_margin_ns]}]
+##     if {$adc_min <= 0 || $adc_max >= $adc_ui || $adc_min > $adc_max} {
+##         error "ADC eye crosses its selected DCO edge; review hardware phase/delay (min=$adc_min max=$adc_max UI=$adc_ui)"
+##     }
+##     # AD9122 Rev C Table 13, register 0x16 = 0: tS=-0.05, tH=0.65.
+##     # Data and DCI launch on the SAME ODDR edge. Rebase BOTH output delays by
+##     # one UI so default opposite-edge DDR STA checks that same-edge word.
+##     # This avoids granting a spurious extra UI to the new I/Q word.
+##     set dac_max [expr {$dac_ui - 0.05 + [dict get $profile dac_board_skew_max_ns] +
+##         [dict get $profile dac_margin_ns]}]
+##     set dac_min [expr {$dac_ui - 0.65 + [dict get $profile dac_board_skew_min_ns] -
+##         [dict get $profile dac_margin_ns]}]
+##     if {$dac_max - $dac_min >= $dac_ui} {
+##         error "DAC setup/hold, PCB skew and uncertainty leave no valid DDR eye"
+##     }
+##     return [dict create adc_min $adc_min adc_max $adc_max \
+##         dac_min $dac_min dac_max $dac_max]
+## }
+## proc ::power_kicker_io::require_validated_profile {} {
+##     variable status
+##     variable reasons
+##     if {![load_profile]} {
+##         error "External I/O timing signoff blocked: $status; [join $reasons {; }]"
+##     }
+##     return $status
+## }
+## proc ::power_kicker_io::apply {} {
+##     variable profile
+##     variable status
+##     variable reasons
+##     # Use the primary source port: ODDRE1 expands into device primitives during
+##     # implementation, so a hard-coded .../u_dac_dci_oddr/C pin is not portable.
+##     # divide_by 1 follows the actual source->buffer->ODDR->OBUFDS clock path.
+##     set dci_source [get_ports fpga_clk_p]
+##     create_generated_clock -name dac_dci_forwarded -source $dci_source \
+##         -divide_by 1 [get_ports dac_dci_p]
+##     if {![load_profile]} {
+##         puts "WARNING: POWER_KICKER_IO_TIMING=$status; [join $reasons {; }]. Internal build only; ADC/DAC external timing is NOT signed off."
+##         return
+##     }
+##     foreach {name key} {adc_clk_p adc_period_ns fpga_clk_p dac_period_ns} {
+##         set actual [get_property PERIOD [get_clocks $name]]
+##         if {abs($actual - [dict get $profile $key]) > 0.000001} {
+##             error "Timing profile $key disagrees with active clock $name"
+##         }
+##     }
+##     set delays [calculate_delays]
+##     set adc_ports [get_ports {adc_data_p1[*] adc_data_n1[*]}]
+##     set dac_ports [get_ports {dac_data_p[*] dac_data_n[*] dac_frame_p dac_frame_n}]
+##     if {[llength $adc_ports] != 28 || [llength $dac_ports] != 34} {
+##         error "Unexpected ADC/DAC differential port count; review timing coverage"
+##     }
+##     set_input_delay -clock adc_clk_p -max [dict get $delays adc_max] $adc_ports
+##     set_input_delay -clock adc_clk_p -min [dict get $delays adc_min] $adc_ports
+##     set_input_delay -clock adc_clk_p -clock_fall -add_delay -max [dict get $delays adc_max] $adc_ports
+##     set_input_delay -clock adc_clk_p -clock_fall -add_delay -min [dict get $delays adc_min] $adc_ports
+##     set_output_delay -clock dac_dci_forwarded -max [dict get $delays dac_max] $dac_ports
+##     set_output_delay -clock dac_dci_forwarded -min [dict get $delays dac_min] $dac_ports
+##     set_output_delay -clock dac_dci_forwarded -clock_fall -add_delay -max [dict get $delays dac_max] $dac_ports
+##     set_output_delay -clock dac_dci_forwarded -clock_fall -add_delay -min [dict get $delays dac_min] $dac_ports
+##     set status CONSTRAINED_AWAITING_STA
+##     puts "INFO: POWER_KICKER_IO_TIMING=$status; board=[dict get $profile board_revision]; delays(ns)=$delays"
+## }
+## proc ::power_kicker_io::audit_routed_profile {report_dir {require_signoff 0}} {
+##     variable profile
+##     variable status
+##     variable reasons
+##     file mkdir $report_dir
+##     set summary_path [file join $report_dir adc_dac_io_status.txt]
+##     if {![load_profile]} {
+##         set fd [open $summary_path w]
+##         puts $fd "STATUS=$status"
+##         puts $fd "DETAIL=[join $reasons {; }]"
+##         puts $fd {External ADC/DAC timing is not signed off.}
+##         close $fd
+##         if {$require_signoff} {
+##             error "External I/O timing signoff blocked: $status"
+##         }
+##         return $status
+##     }
+##     set expected [calculate_delays]
+##     set failures {}
+##     set count 0
+##     set csv [open [file join $report_dir adc_dac_io_coverage.csv] w]
+##     puts $csv {interface,port,analysis,clock_edge,delay_ns,slack_ns,requirement_ns,status}
+##     # ADC differential timing is represented by the P pin in the DIFFINBUF
+##     # timing model; both polarities still have input-delay declarations.
+##     set adc_ports [get_ports {adc_data_p1[*]}]
+##     set dac_ports [get_ports {dac_data_p[*] dac_data_n[*] dac_frame_p dac_frame_n}]
+##     if {[llength $adc_ports] != 14 || [llength $dac_ports] != 34} {
+##         lappend failures {ADC/DAC port inventory does not match expected coverage}
+##     }
+##     foreach iface {adc dac} {
+##         set ports [expr {$iface eq {adc} ? $adc_ports : $dac_ports}]
+##         foreach port $ports {
+##             foreach kind {max min} {
+##                 foreach edge {rise fall} {
+##                     if {$iface eq {adc}} {
+##                         set paths [get_timing_paths -quiet \
+##                             -${edge}_from [get_clocks adc_clk_p] -through $port \
+##                             -delay_type $kind -max_paths 1]
+##                         set delay_property INPUT_DELAY
+##                     } else {
+##                         set paths [get_timing_paths -quiet \
+##                             -from [get_clocks fpga_clk_p] -through $port \
+##                             -${edge}_to [get_clocks dac_dci_forwarded] \
+##                             -delay_type $kind -max_paths 1]
+##                         set delay_property OUTPUT_DELAY
+##                     }
+##                     incr count
+##                     set row_status PASS
+##                     if {[llength $paths] != 1} {
+##                         lappend failures "$iface $port $kind $edge: missing constrained path"
+##                         puts $csv "$iface,$port,$kind,$edge,,,,MISSING_PATH"
+##                         continue
+##                     }
+##                     set actual_delay [get_property $delay_property $paths]
+##                     set slack [get_property SLACK $paths]
+##                     set requirement [get_property REQUIREMENT $paths]
+##                     # Vivado timing path properties report to ps precision.
+##                     if {$actual_delay eq {} ||
+##                         abs($actual_delay - [dict get $expected ${iface}_${kind}]) > 0.0011} {
+##                         set row_status DELAY_MISMATCH
+##                         lappend failures "$iface $port $kind $edge: applied delay differs from profile"
+##                     }
+##                     if {$slack eq {} || $slack < 0} {
+##                         set row_status TIMING_FAILED
+##                         lappend failures "$iface $port $kind $edge: slack=$slack ns"
+##                     }
+##                     if {$iface eq {dac}} {
+##                         set edge_requirement [expr {$kind eq {max} ? 1.0 : 0.0}]
+##                         if {abs($requirement - $edge_requirement) > 0.0011} {
+##                             set row_status EDGE_MISMATCH
+##                             lappend failures "$iface $port $kind $edge: unexpected clock relationship"
+##                         }
+##                     }
+##                     puts $csv "$iface,$port,$kind,$edge,$actual_delay,$slack,$requirement,$row_status"
+##                 }
+##             }
+##         }
+##     }
+##     close $csv
+##     foreach kind {max min} {
+##         report_timing -from $adc_ports -delay_type $kind -max_paths 28 -nworst 2 \
+##             -path_type full_clock_expanded -file [file join $report_dir adc_io_${kind}.rpt]
+##         report_timing -to $dac_ports -delay_type $kind -max_paths 68 -nworst 2 \
+##             -path_type full_clock_expanded -file [file join $report_dir dac_io_${kind}.rpt]
+##     }
+##     set status [expr {[llength $failures] ? {IO_STA_FAILED} : {IO_STA_PASSED}}]
+##     set fd [open $summary_path w]
+##     puts $fd "STATUS=$status"
+##     puts $fd "BOARD=[dict get $profile board_revision]"
+##     puts $fd "EVIDENCE=[dict get $profile evidence]"
+##     puts $fd "CHECKED_EDGE_PATHS=$count"
+##     puts $fd "FAILURES=[llength $failures]"
+##     puts $fd [join $failures \n]
+##     puts $fd {I/O STA does not replace CDC review or physical board validation.}
+##     close $fd
+##     puts "INFO: POWER_KICKER_IO_TIMING=$status; checked=$count; failures=[llength $failures]"
+##     if {$require_signoff && [llength $failures]} {
+##         error "ADC/DAC routed timing audit failed; see $summary_path"
+##     }
+##     return $status
+## }
+# set saved_override_exists [info exists ::env(POWER_KICKER_BOARD_TIMING)]
+# if {$saved_override_exists} { set saved_override $::env(POWER_KICKER_BOARD_TIMING) }
+# unset -nocomplain ::env(POWER_KICKER_BOARD_TIMING)
+# set gate_failed [catch {::power_kicker_io::require_validated_profile} gate_error]
+# if {$saved_override_exists} { set ::env(POWER_KICKER_BOARD_TIMING) $saved_override }
+# puts "MISSING_BOARD_STRICT_GATE_ERROR=$gate_error"
+MISSING_BOARD_STRICT_GATE_ERROR=External I/O timing signoff blocked: PROVISIONAL_MISSING_BOARD_PROFILE; Missing board timing profile: C:/Users/user/Desktop/power-kicking_handoff_20260907/verification/recreate_smoke/constraints/board_timing.tcl
+# if {!$gate_failed || [string first PROVISIONAL_MISSING_BOARD_PROFILE $gate_error] < 0} {
+#     error "Strict external timing gate did not reject the missing board profile"
+# }
+# puts "MISSING_BOARD_STRICT_GATE=PASS (failure required and observed)"
+MISSING_BOARD_STRICT_GATE=PASS (failure required and observed)
+# puts "RECREATE_REOPEN_VERIFICATION=PASS"
+RECREATE_REOPEN_VERIFICATION=PASS
+INFO: [Common 17-206] Exiting Vivado at Tue Sep  8 11:31:31 2026...

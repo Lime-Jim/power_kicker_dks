@@ -1,0 +1,2 @@
+﻿INFO: POWER_KICKER_IO_TIMING=CONSTRAINED_AWAITING_STA; board=UNIT_TEST_ONLY; delays(ns)=adc_min 0.29999999999999993 adc_max 1.1 dac_min 0.25 dac_max 1.05
+PASS: test_io_timing_constraints (missing-profile gate, equations, validation, DDR coverage)

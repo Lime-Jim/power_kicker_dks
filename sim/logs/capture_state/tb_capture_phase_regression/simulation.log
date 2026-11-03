@@ -1,0 +1,31 @@
+#-----------------------------------------------------------
+# xsim v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Mon Sep 21 13:39:05 2026
+# Process ID: 8800
+# Current directory: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/sim_20260921_133820/tb_capture_phase_regression
+# Command line: xsim.exe -log simulation.log -mode tcl -source {xsim.dir/tb_capture_phase_regression/xsim_script.tcl}
+# Log file: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/sim_20260921_133820/tb_capture_phase_regression/simulation.log
+# Journal file: C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/verification/sim_20260921_133820/tb_capture_phase_regression\xsim.jou
+# Running On        :DESKTOP-R7OLA88
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :12th Gen Intel(R) Core(TM) i5-12400
+# CPU Frequency     :2496 MHz
+# CPU Physical cores:6
+# CPU Logical cores :12
+# Host memory       :16908 MB
+# Swap memory       :1073 MB
+# Total Virtual     :17982 MB
+# Available Virtual :7207 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_capture_phase_regression/xsim_script.tcl
+# xsim {tb_capture_phase_regression} -autoloadwcfg -runall -onfinish quit -onerror quit
+Time resolution is 1 ps
+run -all
+PASS: tb_capture_phase_regression checks=25
+$finish called at time : 1081 ns : File "C:/Users/user/Desktop/power-kicking_handoff_20260907/pid_state_update/tests/tb_capture_phase_regression.sv" Line 68
+exit 0
+INFO: [Common 17-206] Exiting xsim at Mon Sep 21 13:39:07 2026...

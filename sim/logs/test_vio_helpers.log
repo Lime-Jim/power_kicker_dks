@@ -1,0 +1,13 @@
+﻿VIO auto-save autostart skipped by ::power_kicking_vio_autosave_no_autostart.
+WARNING: Missing PID probe missing_probe
+ERROR: PID VIO is missing expected probes: absent_probe
+ERROR: The programmed bitstream and/or probes .ltx file is old or mismatched.
+ERROR: Build with build_fast_feedback_v1.tcl, then program with matching top_power_kicker.bit and top_power_kicker.ltx files.
+WARNING: Could not restore PID probe vio_pid_kp = 65536. vio_pid_kp is outside signed 16-bit range: 65536
+WARNING: Check the value and VIO width/order. Rebuild with build_fast_feedback_v1.tcl and load the matching bitstream/LTX if needed.
+u_vio_pid is decimal: target/Kp/Ki/Kd signed; enables/window/count/limit unsigned.
+Setting fast-feedback v1 confirm samples:
+  probe = pid/7
+  value = 1
+fast_feedback_v1: vio_pid_confirm_samples committed as 1.
+PASS: test_vio_helpers checks=50

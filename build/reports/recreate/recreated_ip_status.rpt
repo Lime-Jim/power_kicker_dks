@@ -1,0 +1,43 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
+| Date         : Tue Sep  8 11:31:31 2026
+| Host         : DESKTOP-R7OLA88 running 64-bit major release  (build 9200)
+| Command      : report_ip_status
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+IP Status Summary
+
+1. Project IP Status
+--------------------
+Your project uses 4 IP. Some of these IP may have undergone changes in this release of the software. Please review the recommended actions.
+
+More information on the Xilinx versioning policy is available at www.xilinx.com.
+
+Project IP Instances
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| Instance Name | Status     | Recommendation      | Change    | IP Name            | IP      | New Version   | New        | Original Part        |
+|               |            |                     | Log       |                    | Version |               | License    |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| clk_wiz_1     | Up-to-date | No changes required |  *(1)     | Clocking Wizard    | 6.0     | 6.0 (Rev. 14) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           |                    | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 14)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| ila_1         | Up-to-date | No changes required |  *(2)     | ILA (Integrated    | 6.2     | 6.2 (Rev. 15) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           | Logic Analyzer)    | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 15)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| vio_0         | Up-to-date | No changes required |  *(3)     | VIO (Virtual       | 3.0     | 3.0 (Rev. 25) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           | Input/Output)      | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 25)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+| vio_pid       | Up-to-date | No changes required |  *(4)     | VIO (Virtual       | 3.0     | 3.0 (Rev. 25) | Included   | xcau15p-ffvb676-2-i  |
+|               |            |                     |           | Input/Output)      | (Rev.   |               |            |                      |
+|               |            |                     |           |                    | 25)     |               |            |                      |
++---------------+------------+---------------------+-----------+--------------------+---------+---------------+------------+----------------------+
+*(1) d:/vivado2024/Vivado/2024.1/data/ip/xilinx/clk_wiz_v6_0/doc/clk_wiz_v6_0_changelog.txt
+*(2) d:/vivado2024/Vivado/2024.1/data/ip/xilinx/ila_v6_2/doc/ila_v6_2_changelog.txt
+*(3) d:/vivado2024/Vivado/2024.1/data/ip/xilinx/vio_v3_0/doc/vio_v3_0_changelog.txt
+*(4) d:/vivado2024/Vivado/2024.1/data/ip/xilinx/vio_v3_0/doc/vio_v3_0_changelog.txt
+
+

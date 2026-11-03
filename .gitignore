@@ -1,0 +1,15 @@
+# Vivado generated directories (rebuilt by src/recreate_project.tcl + build script)
+*.cache/
+*.runs/
+*.gen/
+*.hw/
+*.ip_user_files/
+*.sim/
+.Xil/
+src/verification/
+*.jou
+*.str
+*.backup.*
+vivado*.log
+data/scripts/figures/
+__pycache__/

@@ -1,0 +1,3 @@
+STATUS=PROVISIONAL_MISSING_BOARD_PROFILE
+DETAIL=Missing board timing profile: C:/Users/user/Desktop/power-kicking_handoff_20260907/constraints/board_timing.tcl
+External ADC/DAC timing is not signed off.
